@@ -1,4 +1,4 @@
-// Vem pronto desde a Aula 1. Três funções que conversam com a tela.
+// Vem pronto desde a Aula 1. Funções que conversam com a tela.
 
 export function elemento(id: string): HTMLElement {
   const encontrado = document.getElementById(id);
@@ -20,6 +20,15 @@ export function selecao(id: string): HTMLSelectElement {
   const encontrado = elemento(id);
   if (!(encontrado instanceof HTMLSelectElement)) {
     throw new Error(`O elemento "${id}" não é um <select>`);
+  }
+  return encontrado;
+}
+
+// Usada para campos <textarea>, como a descrição da tarefa.
+export function areaTexto(id: string): HTMLTextAreaElement {
+  const encontrado = elemento(id);
+  if (!(encontrado instanceof HTMLTextAreaElement)) {
+    throw new Error(`O elemento "${id}" não é um <textarea>`);
   }
   return encontrado;
 }

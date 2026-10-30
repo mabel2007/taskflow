@@ -6,179 +6,306 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TaskFlow</title>
     <link rel="stylesheet" href="./css/taskflow.css">
+
+    <style>
+        .cabecalho-conteudo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .usuario-area {
+            position: relative;
+        }
+
+        .usuario-avatar {
+            width: 44px;
+            height: 44px;
+            border: 2px solid rgba(255,255,255,.7);
+            border-radius: 50%;
+            background: #ffffff;
+            color: #2563eb;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .usuario-menu {
+            display: none;
+            position: absolute;
+            z-index: 20;
+            top: 55px;
+            right: 0;
+            width: 290px;
+            padding: 18px;
+            background: #ffffff;
+            color: #263247;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,.15);
+        }
+
+        .usuario-menu.aberto {
+            display: block;
+        }
+
+        .usuario-identificacao {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .usuario-avatar-grande {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-weight: bold;
+        }
+
+        .usuario-dados strong,
+        .usuario-dados small {
+            display: block;
+        }
+
+        .usuario-dados small {
+            margin-top: 4px;
+            color: #64748b;
+            overflow-wrap: anywhere;
+        }
+
+        .usuario-menu button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 7px;
+            background: transparent;
+            color: #334155;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .usuario-menu button:hover {
+            background: #eff6ff;
+        }
+
+        .usuario-menu .overview {
+            display: none;
+            margin-top: 8px;
+            padding: 12px;
+            border-radius: 9px;
+            background: #f1f5f9;
+        }
+
+        .usuario-menu .overview.visivel {
+            display: block;
+        }
+
+        .overview h3 {
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .overview-grade {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .overview-item strong {
+            display: block;
+            font-size: 22px;
+            color: #263247;
+        }
+
+        .overview-item span {
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        .usuario-separador {
+            height: 1px;
+            margin: 12px 0;
+            background: #e2e8f0;
+        }
+
+        @media (max-width: 600px) {
+            .cabecalho-conteudo {
+                align-items: flex-start;
+            }
+
+            .usuario-menu {
+                width: min(290px, 85vw);
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <div class="container">
-        <header class="cabecalho">
-            <div class="cabecalho__marca">
+
+    <header>
+        <div class="cabecalho-conteudo">
+            <div>
                 <h1 id="nome-do-sistema">TaskFlow</h1>
-                <span id="versao">v0.2.0</span>
-            </div>
-
-            <div class="perfil">
-                <span>Gerenciador de tarefas</span>
-                <span id="data-de-hoje"></span>
-            </div>
-        </header>
-
-        <main>
-            <section class="introducao">
-                <div>
-                    <h2>Organize suas atividades</h2>
-                    <p>Acompanhe suas tarefas, prioridades e prazos.</p>
-                </div>
-
-                <button type="button" id="abrir-modal" class="botao botao--principal">
-                    + Adicionar tarefa
-                </button>
-            </section>
-
-            <section class="estatisticas">
-                <article class="estatistica">
-                    <span>Total de tarefas</span>
-                    <strong id="total">0</strong>
-                </article>
-
-                <article class="estatistica">
-                    <span>Não iniciadas</span>
-                    <strong id="pendentes">0</strong>
-                </article>
-
-                <article class="estatistica">
-                    <span>Em andamento</span>
-                    <strong id="em-andamento">0</strong>
-                </article>
-
-                <article class="estatistica">
-                    <span>Concluídas</span>
-                    <strong id="concluidas">0</strong>
-                </article>
-
-                <article class="estatistica">
-                    <span>Bloqueadas</span>
-                    <strong id="bloqueadas">0</strong>
-                </article>
-            </section>
-
-            <section class="secao-tarefas">
-                <div class="secao-tarefas__cabecalho">
-                    <div>
-                        <h2>Minhas tarefas</h2>
-                        <p>Pesquise e filtre suas atividades.</p>
-                    </div>
-                    <span id="contador-lista">0 tarefas</span>
-                </div>
-
-                <section class="filtros">
-                    <div class="campo campo--pesquisa">
-                        <label for="pesquisa">Pesquisar tarefas</label>
-                        <input
-                            type="search"
-                            id="pesquisa"
-                            placeholder="Buscar pelo título ou descrição..."
-                        >
-                    </div>
-
-                    <div class="campo">
-                        <label for="filtro-data">Data de criação</label>
-                        <input type="date" id="filtro-data">
-                    </div>
-
-                    <div class="campo">
-                        <label for="filtro-prazo">Situação do prazo</label>
-                        <select id="filtro-prazo">
-                            <option value="">Todos</option>
-                            <option value="no_prazo">No prazo</option>
-                            <option value="em_atraso">Em atraso</option>
-                        </select>
-                    </div>
-
-                    <div class="campo">
-                        <label for="filtro-prioridade">Prioridade</label>
-                        <select id="filtro-prioridade">
-                            <option value="">Todas</option>
-                            <option value="baixa">Baixa</option>
-                            <option value="media">Média</option>
-                            <option value="alta">Alta</option>
-                        </select>
-                    </div>
-
-                    <div class="campo">
-                        <label for="filtro-status">Status</label>
-                        <select id="filtro-status">
-                            <option value="">Todos</option>
-                            <option value="nao_iniciada">Não iniciada</option>
-                            <option value="em_andamento">Em andamento</option>
-                            <option value="concluida">Concluída</option>
-                            <option value="bloqueada">Bloqueada</option>
-                        </select>
-                    </div>
-
-                    <button type="button" id="limpar-filtros" class="botao">
-                        Limpar filtros
-                    </button>
-                </section>
-
-                <p id="comece-por" hidden>
-                    Nenhuma tarefa encontrada com esses filtros.
+                <p>Organize suas tarefas e acompanhe seu progresso.</p>
+                <p>
+                    <span id="versao">Versão 1.0</span> |
+                    <span id="data-de-hoje"></span>
                 </p>
-
-                <ul id="lista" class="lista-tarefas"></ul>
-            </section>
-        </main>
-
-        <footer class="rodape">
-            <p>TaskFlow — Organização e acompanhamento de tarefas.</p>
-        </footer>
-    </div>
-
-    <dialog id="modal-tarefa" class="modal">
-        <div class="modal__conteudo">
-            <div class="modal__cabecalho">
-                <div>
-                    <h2 id="titulo-modal">Nova tarefa</h2>
-                    <p id="descricao-modal">
-                        Preencha as informações da sua atividade.
-                    </p>
-                </div>
-
-                <button type="button" id="fechar-modal" class="botao-fechar"
-                    aria-label="Fechar">×</button>
             </div>
 
-            <form id="formulario">
-                <div class="campo">
-                    <label for="titulo">Título</label>
-                    <input
-                        type="text"
-                        id="titulo"
-                        minlength="3"
-                        placeholder="Ex.: Estudar TypeScript"
-                        required
-                    >
+            <div class="usuario-area">
+                <button
+                    type="button"
+                    id="botao-usuario"
+                    class="usuario-avatar"
+                    aria-label="Abrir menu do usuário"
+                    aria-expanded="false"
+                >
+                    MI
+                </button>
+
+                <div id="menu-usuario" class="usuario-menu">
+
+                    <div class="usuario-identificacao">
+                        <div class="usuario-avatar-grande">MI</div>
+
+                        <div class="usuario-dados">
+                            <strong id="usuario-nome">Seu nome</strong>
+                            <small id="usuario-email">seu@email.com</small>
+                        </div>
+                    </div>
+
+                    <div class="usuario-separador"></div>
+
+                    <button type="button" id="mostrar-overview">
+                        Mostrar overview
+                    </button>
+
+                    <div id="overview-usuario" class="overview">
+                        <h3>Visão geral das tarefas</h3>
+
+                        <div class="overview-grade">
+                            <div class="overview-item">
+                                <strong id="overview-total">0</strong>
+                                <span>Total de tarefas</span>
+                            </div>
+
+                            <div class="overview-item">
+                                <strong id="overview-concluidas">0</strong>
+                                <span>Concluídas</span>
+                            </div>
+
+                            <div class="overview-item">
+                                <strong id="overview-andamento">0</strong>
+                                <span>Em andamento</span>
+                            </div>
+
+                            <div class="overview-item">
+                                <strong id="overview-bloqueadas">0</strong>
+                                <span>Bloqueadas</span>
+                            </div>
+
+                            <div class="overview-item">
+                                <strong id="overview-pendentes">0</strong>
+                                <span>Não iniciadas</span>
+                            </div>
+
+                            <div class="overview-item">
+                                <strong id="overview-percentual">0%</strong>
+                                <span>Conclusão</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="usuario-separador"></div>
+
+                    <button type="button" id="acao-sair">
+                        Sair da conta
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+
+        <section>
+            <button type="button" id="abrir-modal">
+                + Adicionar tarefa
+            </button>
+        </section>
+
+        <section class="indicadores">
+            <div class="indicador">
+                <h3>Total de tarefas</h3>
+                <strong id="total">0</strong>
+            </div>
+
+            <div class="indicador">
+                <h3>Não iniciadas</h3>
+                <strong id="pendentes">0</strong>
+            </div>
+
+            <div class="indicador">
+                <h3>Em andamento</h3>
+                <strong id="em-andamento">0</strong>
+            </div>
+
+            <div class="indicador">
+                <h3>Concluídas</h3>
+                <strong id="concluidas">0</strong>
+            </div>
+
+            <div class="indicador">
+                <h3>Bloqueadas</h3>
+                <strong id="bloqueadas">0</strong>
+            </div>
+        </section>
+
+        <section class="area-filtros">
+
+            <input
+                type="search"
+                id="pesquisa"
+                placeholder="Pesquisar tarefas pelo título ou descrição..."
+            >
+
+            <div class="filtros">
+
+                <div>
+                    <label for="filtro-data">Data de criação</label>
+                    <input type="date" id="filtro-data">
                 </div>
 
-                <div class="campo">
-                    <label for="descricao">Descrição</label>
-                    <textarea
-                        id="descricao"
-                        rows="3"
-                        placeholder="Descreva a atividade..."
-                    ></textarea>
+                <div>
+                    <label for="filtro-prazo">Situação do prazo</label>
+                    <select id="filtro-prazo">
+                        <option value="">Todos os prazos</option>
+                        <option value="no_prazo">No prazo</option>
+                        <option value="em_atraso">Em atraso</option>
+                    </select>
                 </div>
 
-                <div class="campo">
-                    <label for="prioridade">Prioridade</label>
-                    <select id="prioridade" required>
+                <div>
+                    <label for="filtro-prioridade">Prioridade</label>
+                    <select id="filtro-prioridade">
+                        <option value="">Todas</option>
                         <option value="baixa">Baixa</option>
-                        <option value="media" selected>Média</option>
+                        <option value="media">Média</option>
                         <option value="alta">Alta</option>
                     </select>
                 </div>
 
-                <div class="campo">
-                    <label for="status">Status da etapa</label>
-                    <select id="status" required>
+                <div>
+                    <label for="filtro-status">Status</label>
+                    <select id="filtro-status">
+                        <option value="">Todos</option>
                         <option value="nao_iniciada">Não iniciada</option>
                         <option value="em_andamento">Em andamento</option>
                         <option value="concluida">Concluída</option>
@@ -186,28 +313,100 @@
                     </select>
                 </div>
 
-                <div class="campo">
-                    <label for="prazo">Prazo final planejado</label>
-                    <input type="date" id="prazo">
-                </div>
+            </div>
 
-                <p id="erro" role="alert"></p>
+            <button type="button" id="limpar-filtros">
+                Limpar filtros
+            </button>
 
-                <div class="modal__acoes">
-                    <button type="button" id="cancelar-modal" class="botao">
-                        Cancelar
-                    </button>
+        </section>
 
-                    <button type="submit" id="salvar-tarefa"
-                        class="botao botao--principal">
-                        Salvar tarefa
-                    </button>
-                </div>
-            </form>
-        </div>
+        <section>
+            <p id="contador-lista"></p>
+
+            <p id="comece-por" hidden>
+                Nenhuma tarefa encontrada. Adicione uma tarefa ou altere os filtros.
+            </p>
+
+            <div id="lista"></div>
+        </section>
+
+    </main>
+
+    <dialog id="modal-tarefa" class="modal">
+
+        <button type="button" id="fechar-modal" aria-label="Fechar">
+            &times;
+        </button>
+
+        <h2 id="titulo-modal">Adicionar tarefa</h2>
+        <p id="descricao-modal">Preencha os dados da tarefa.</p>
+
+        <form id="formulario">
+
+            <div>
+                <label for="titulo">Título</label>
+                <input
+                    type="text"
+                    id="titulo"
+                    required
+                    minlength="3"
+                    placeholder="Nome da tarefa"
+                >
+            </div>
+
+            <div>
+                <label for="descricao">Descrição</label>
+                <textarea
+                    id="descricao"
+                    placeholder="Descreva sua tarefa..."
+                ></textarea>
+            </div>
+
+            <div>
+                <label for="prioridade">Prioridade</label>
+                <select id="prioridade" required>
+                    <option value="baixa">Baixa</option>
+                    <option value="media" selected>Média</option>
+                    <option value="alta">Alta</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="status">Status</label>
+                <select id="status" required>
+                    <option value="nao_iniciada">Não iniciada</option>
+                    <option value="em_andamento">Em andamento</option>
+                    <option value="concluida">Concluída</option>
+                    <option value="bloqueada">Bloqueada</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="prazo">Prazo de entrega</label>
+                <input type="date" id="prazo">
+            </div>
+
+            <p id="erro" role="alert"></p>
+
+            <button type="submit" id="salvar-tarefa">
+                Salvar tarefa
+            </button>
+
+            <button type="button" id="cancelar-modal">
+                Cancelar
+            </button>
+
+        </form>
+
     </dialog>
 
+    <footer>
+        <p>TaskFlow — Organização e produtividade.</p>
+    </footer>
+
     <script type="module" src="./src/main.ts"></script>
+
 </body>
 </html>
 
