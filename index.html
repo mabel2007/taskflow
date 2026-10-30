@@ -6,14 +6,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f5f7fb" />
+
     <title>TaskFlow</title>
+
     <link rel="stylesheet" href="./css/taskflow.css" />
 </head>
 
 <body>
 
-    <!-- Cabeçalho -->
+    <!-- Cabeçalho do sistema -->
     <header class="cabecalho">
+
         <div class="cabecalho__marca">
             <div class="cabecalho__icone">T</div>
 
@@ -31,7 +34,7 @@
             </div>
         </div>
 
-        <!-- Área de perfil -->
+        <!-- Perfil visual do usuário -->
         <div class="perfil">
             <div class="perfil__avatar">U</div>
 
@@ -40,6 +43,7 @@
                 <span class="perfil__tipo">Usuário</span>
             </div>
         </div>
+
     </header>
 
     <main class="conteudo">
@@ -54,6 +58,7 @@
 
         <!-- Indicadores -->
         <section class="secao-estatisticas">
+
             <h2 class="secao__titulo">Visão geral</h2>
 
             <ul class="estatisticas">
@@ -84,10 +89,12 @@
                 </li>
 
             </ul>
+
         </section>
 
         <!-- Cadastro de tarefas -->
         <section class="secao-cadastro">
+
             <div class="secao__cabecalho">
                 <div>
                     <h2 class="secao__titulo">Nova tarefa</h2>
@@ -115,15 +122,42 @@
                 </div>
 
                 <div class="campo">
+                    <label class="campo__rotulo" for="descricao">
+                        Descrição
+                    </label>
+
+                    <textarea
+                        class="campo__entrada"
+                        id="descricao"
+                        placeholder="Descreva a tarefa..."
+                        rows="3"
+                    ></textarea>
+                </div>
+
+                <div class="campo">
                     <label class="campo__rotulo" for="prioridade">
                         Prioridade
                     </label>
 
                     <select class="campo__selecao" id="prioridade">
+
                         <option value="baixa">Baixa</option>
                         <option value="media" selected>Média</option>
                         <option value="alta">Alta</option>
+
                     </select>
+                </div>
+
+                <div class="campo">
+                    <label class="campo__rotulo" for="prazo">
+                        Prazo
+                    </label>
+
+                    <input
+                        class="campo__entrada"
+                        id="prazo"
+                        type="date"
+                    />
                 </div>
 
                 <button class="botao botao--primario" type="submit">
@@ -133,6 +167,7 @@
             </form>
 
             <p class="campo__erro" id="erro" role="alert"></p>
+
         </section>
 
         <!-- Lista de tarefas -->
@@ -155,6 +190,7 @@
 
     </main>
 
+    <!-- Rodapé -->
     <footer class="rodape">
         <p>TaskFlow · Organização e produtividade</p>
     </footer>
@@ -163,3 +199,4 @@
 
 </body>
 </html>
+

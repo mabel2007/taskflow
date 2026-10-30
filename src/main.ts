@@ -1,7 +1,13 @@
+
 import { campo, elemento, selecao } from "./dom";
 import { tarefas } from "./dados";
 import type { Prioridade, Tarefa } from "./tipos";
-import { adicionarTarefa, transformar } from "./servicos";
+import {
+    adicionarTarefa,
+    transformar,
+    editarTarefa,
+    excluirTarefa
+} from "./servicos";
 
 // Identificação do sistema
 elemento("nome-do-sistema").textContent = "TaskFlow";
@@ -12,32 +18,87 @@ elemento("data-de-hoje").textContent =
 // O estado do programa: a lista que está valendo agora
 const lista: Tarefa[] = [...tarefas];
 
+// Nomes dos status para exibição
+const nomesStatus: Record<Tarefa["status"], string> = {
+    nao_iniciada: "Não iniciada",
+    em_andamento: "Em andamento",
+    concluida: "Concluída",
+    bloqueada: "Bloqueada",
+};
+
 // Uma tarefa vira um <li> pronto para a tela
 function criarItem(tarefa: Tarefa): HTMLLIElement {
     const item = document.createElement("li");
     item.className = `tarefa tarefa--${tarefa.prioridade}`;
 
+    // Título
     const titulo = document.createElement("h3");
     titulo.className = "tarefa__titulo";
     titulo.textContent = `#${tarefa.id} ${tarefa.titulo}`;
 
+    // Prioridade
     const etiqueta = document.createElement("span");
     etiqueta.className = `etiqueta etiqueta--${tarefa.prioridade}`;
     etiqueta.textContent = tarefa.prioridade;
 
+    // Status
     const status = document.createElement("span");
     status.className = `status status--${tarefa.status}`;
-
-    const nomesStatus: Record<Tarefa["status"], string> = {
-        nao_iniciada: "Não iniciada",
-        em_andamento: "Em andamento",
-        concluida: "Concluída",
-        bloqueada: "Bloqueada",
-    };
-
     status.textContent = nomesStatus[tarefa.status];
 
-    item.append(titulo, etiqueta, status);
+    // Área dos botões
+    const acoes = document.createElement("div");
+    acoes.className = "tarefa__acoes";
+
+    // Botão Editar
+    const botaoEditar = document.createElement("button");
+    botaoEditar.className = "botao botao--pequeno";
+    botaoEditar.textContent = "Editar";
+
+    botaoEditar.addEventListener("click", () => {
+        const novoTitulo = prompt(
+            "Digite o novo título:",
+            tarefa.titulo
+        );
+
+        if (novoTitulo === null) {
+            return;
+        }
+
+        try {
+            editarTarefa(lista, tarefa.id, {
+                titulo: novoTitulo.trim()
+            });
+
+            elemento("erro").textContent = "";
+            desenhar();
+        } catch (erro) {
+            if (erro instanceof Error) {
+                elemento("erro").textContent = erro.message;
+            }
+        }
+    });
+
+    // Botão Excluir
+    const botaoExcluir = document.createElement("button");
+    botaoExcluir.className = "botao botao--pequeno botao--perigo";
+    botaoExcluir.textContent = "Excluir";
+
+    botaoExcluir.addEventListener("click", () => {
+        const confirmou = confirm(
+            `Deseja realmente excluir a tarefa "${tarefa.titulo}"?`
+        );
+
+        if (confirmou) {
+            excluirTarefa(lista, tarefa.id);
+            elemento("erro").textContent = "";
+            desenhar();
+        }
+    });
+
+    // Montagem do cartão
+    acoes.append(botaoEditar, botaoExcluir);
+    item.append(titulo, etiqueta, status, acoes);
 
     return item;
 }
@@ -45,7 +106,6 @@ function criarItem(tarefa: Tarefa): HTMLLIElement {
 // A função que desenha a tela inteira a partir da lista
 function desenhar(): void {
     const itens = transformar(lista, criarItem);
-
     elemento("lista").replaceChildren(...itens);
 
     let naoIniciadas = 0;
@@ -65,10 +125,10 @@ function desenhar(): void {
         }
     }
 
+    // Atualiza os indicadores
     elemento("total").textContent = String(lista.length);
     elemento("pendentes").textContent = String(naoIniciadas);
 
-    // Atualiza os indicadores adicionais, caso existam no HTML
     const andamento = document.getElementById("em-andamento");
     const concluidasElemento = document.getElementById("concluidas");
     const bloqueadasElemento = document.getElementById("bloqueadas");
@@ -86,7 +146,7 @@ function desenhar(): void {
     }
 }
 
-// O formulário: a função abaixo é um CALLBACK
+// Formulário de cadastro
 elemento("formulario").addEventListener("submit", (evento) => {
     evento.preventDefault();
 
@@ -100,7 +160,6 @@ elemento("formulario").addEventListener("submit", (evento) => {
         });
 
         campo("titulo").value = "";
-
         desenhar();
     } catch (erro) {
         if (erro instanceof Error) {
