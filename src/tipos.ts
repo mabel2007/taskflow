@@ -1,13 +1,20 @@
 export type Prioridade = "baixa" | "media" | "alta";
-export type Status = "pendente" | "em_andamento" | "concluida";
+
+export type Status =
+  | "nao_iniciada"
+  | "em_andamento"
+  | "concluida"
+  | "bloqueada";
+
 export interface Tarefa {
-readonly id: number;
-titulo: string;
-descricao?: string | null; // no banco, "sem valor" é NULL
-prioridade: Prioridade;
-status: Status;
-tags: string[];
-prazo?: string | null; // NOVO: "2026-10-22" ou null
-criadaEm: Date;
+  readonly id: number;
+  titulo: string;
+  descricao?: string | null;
+  prioridade: Prioridade;
+  status: Status;
+  tags: string[];
+  prazo?: string | null;
+  criadaEm: Date;
 }
-export type NovaTarefa = Omit<Tarefa, "id" | "status" | "criadaEm">
+
+export type NovaTarefa = Omit<Tarefa, "id" | "status" | "criadaEm">;
