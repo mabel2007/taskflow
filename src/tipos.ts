@@ -9,3 +9,4 @@ export interface Tarefa {
     tags: string[];
     criadaEm: Date;
 }
+export type NovaTarefa = Omit<Tarefa, "id" | "status" | "criadaEm">

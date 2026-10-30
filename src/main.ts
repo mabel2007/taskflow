@@ -1,50 +1,54 @@
-import { elemento } from "./dom";
+import { campo, elemento, selecao } from "./dom";
 import { tarefas } from "./dados";
-
-const nomeDoSistema: string = "TaskFlow";
-const versao: string = "0.1.0";
-const hoje: string = new Date().toLocaleDateString("pt-BR");
-const autor = "Turma de quinta"; // inferência: o TypeScript deduz que é string
-
-elemento("nome-do-sistema").textContent = nomeDoSistema;
-elemento("versao").textContent = `v${versao}`;
-elemento("data-de-hoje").textContent = hoje;
-
-console.log(`TaskFlow iniciado. Autor: ${autor}`); // aparece no F12
-
-// ---------- Parte 3: o array e os laços ---------
-const lista = elemento("lista");
-// LAÇO 1 — for...of: percorre os valores, sem índice
-for (const tarefa of tarefas) {
-    const item = document.createElement("li");
-    item.className = `tarefa tarefa--${tarefa.prioridade}`;
-    const titulo = document.createElement("h3");
-    titulo.className = "tarefa__titulo";
-    titulo.textContent = `#${tarefa.id} ${tarefa.titulo}`;
-    const etiqueta = document.createElement("span");
-    etiqueta.className = `etiqueta etiqueta--${tarefa.prioridade}`;
-    etiqueta.textContent = tarefa.prioridade;
-    item.append(titulo, etiqueta);
-    lista.append(item);
+import type { Prioridade, Tarefa } from "./tipos";
+import { adicionarTarefa, transformar } from "./servicos";
+elemento("nome-do-sistema").textContent = "TaskFlow";
+elemento("versao").textContent = "v0.2.0";
+elemento("data-de-hoje").textContent = new Date().toLocaleDateString("pt-BR");
+// O estado do programa: a lista que está valendo agora
+const lista: Tarefa[] = [...tarefas];
+// Uma tarefa vira um <li> pronto para a tela
+function criarItem(tarefa: Tarefa): HTMLLIElement {
+const item = document.createElement("li");
+item.className = `tarefa tarefa--${tarefa.prioridade}`;
+const titulo = document.createElement("h3");
+titulo.className = "tarefa__titulo";
+titulo.textContent = `#${tarefa.id} ${tarefa.titulo}`;
+const etiqueta = document.createElement("span");
+etiqueta.className = `etiqueta etiqueta--${tarefa.prioridade}`;
+etiqueta.textContent = tarefa.prioridade;
+item.append(titulo, etiqueta);
+return item;
 }
-// LAÇO 2 — for com índice: contando as pendentes
+// A função que desenha a tela inteira a partir da lista
+function desenhar(): void {
+const itens = transformar(lista, criarItem); // a SUA função de alta ordem
+elemento("lista").replaceChildren(...itens);
 let pendentes = 0;
-for (let i = 0; i < tarefas.length; i++) {
-    if (tarefas[i].status === "pendente") {
-        pendentes++;
-    }
+for (const tarefa of lista) {
+if (tarefa.status === "pendente") {
+pendentes++;
 }
-elemento("total").textContent = String(tarefas.length);
+}
+elemento("total").textContent = String(lista.length);
 elemento("pendentes").textContent = String(pendentes);
-// LAÇO 3 — while: achar a primeira tarefa de prioridade alta
-// (não sabemos quantas voltas: o laço para assim que encontra)
-let posicao = 0;
-while (posicao < tarefas.length && tarefas[posicao].prioridade !== "alta") {
-    posicao++;
 }
-if (posicao < tarefas.length) {
-    // achou: mostra o aviso na página
-    const urgente = tarefas[posicao];
-    elemento("comece-por").textContent = `Comece por: #${urgente.id} ${urgente.titulo}`;
-    elemento("comece-por").hidden = false;
+// O formulário: a função abaixo é um CALLBACK — quem a chama é o navegador
+elemento("formulario").addEventListener("submit", (evento) => {
+evento.preventDefault(); // sem isto, a página recarrega e tudo se perde
+elemento("erro").textContent = "";
+try {
+adicionarTarefa(lista, {
+titulo: campo("titulo").value.trim(),
+prioridade: selecao("prioridade").value as Prioridade,
+tags: [],
+});
+campo("titulo").value = "";
+desenhar(); // mudou a lista? desenhe de novo
+} catch (erro) {
+if (erro instanceof Error) {
+elemento("erro").textContent = erro.message;
 }
+}
+});
+desenhar();

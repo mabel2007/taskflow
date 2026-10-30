@@ -1,26 +1,47 @@
 <!doctype html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TaskFlow</title>
-    <link rel="stylesheet" href="./css/taskflow.css" />
-  </head>
-  <body>
-    <header class="cabecalho">
-      <div>
-        <h1 class="cabecalho__titulo"><span id="nome-do-sistema">—</span></h1>
-        <p class="cabecalho__subtitulo"><span id="versao">—</span> · <span id="data-de-hoje">—</span></p>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskFlow</title>
+  <link rel="stylesheet" href="./css/taskflow.css" />
+</head>
+
+<body>
+  <header class="cabecalho">
+    <div>
+      <h1 class="cabecalho__titulo"><span id="nome-do-sistema">—</span></h1>
+      <p class="cabecalho__subtitulo">—<span id="versao">—</span> · <span id="data-de-hoje">—</span></p>
+    </div>
+    <form class="formulario" id="formulario">
+  </header>
+  <main>
+    <ul class="estatisticas">
+      <li class="estatistica"><span class="estatistica__numero" id="total">0</span><span
+          class="estatistica__rotulo">Total</span></li>
+      <li class="estatistica"><span class="estatistica__numero" id="pendentes">0</span><span
+          class="estatistica__rotulo">Pendentes</span></li>
+    </ul>
+    <form class="formulario" id="formulario">
+      <div class="campo">
+        <label class="campo__rotulo" for="titulo">Título</label>
+        <input class="campo__entrada" id="titulo" type="text" autocomplete="off" />
       </div>
-    </header>
-    <main>
-      <ul class="estatisticas">
-        <li class="estatistica"><span class="estatistica__numero" id="total">0</span><span class="estatistica__rotulo">Total</span></li>
-        <li class="estatistica"><span class="estatistica__numero" id="pendentes">0</span><span class="estatistica__rotulo">Pendentes</span></li>
-      </ul>
-      <p class="aviso" id="comece-por" hidden></p>
-      <ul class="lista" id="lista"></ul>
-    </main>
-    <script type="module" src="./src/main.ts"></script>
-  </body>
+      <div class="campo">
+        <label class="campo__rotulo" for="prioridade">Prioridade</label>
+        <select class="campo__selecao" id="prioridade">
+          <option value="baixa">Baixa</option>
+          <option value="media" selected>Média</option>
+          <option value="alta">Alta</option>
+        </select>
+      </div>
+      <button class="botao botao--primario" type="submit">Cadastrar</button>
+    </form>
+    <p class="campo__erro" id="erro" role="alert"></p>
+    <p class="aviso" id="comece-por" hidden></p>
+    <ul class="lista" id="lista"></ul>
+  </main>
+  <script type="module" src="./src/main.ts"></script>
+</body>
 </html>
