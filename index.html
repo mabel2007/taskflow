@@ -14,9 +14,7 @@
 
 <body>
 
-    <!-- Cabeçalho do sistema -->
     <header class="cabecalho">
-
         <div class="cabecalho__marca">
             <div class="cabecalho__icone">T</div>
 
@@ -34,7 +32,6 @@
             </div>
         </div>
 
-        <!-- Perfil visual do usuário -->
         <div class="perfil">
             <div class="perfil__avatar">U</div>
 
@@ -43,22 +40,28 @@
                 <span class="perfil__tipo">Usuário</span>
             </div>
         </div>
-
     </header>
 
     <main class="conteudo">
 
-        <!-- Apresentação -->
         <section class="introducao">
             <div>
+                <span class="introducao__destaque">SEU ESPAÇO DE ORGANIZAÇÃO</span>
                 <h2>Meu painel de tarefas</h2>
                 <p>Acompanhe suas atividades e organize sua rotina.</p>
             </div>
+
+            <button
+                class="botao botao--primario botao--adicionar"
+                id="abrir-modal"
+                type="button"
+            >
+                <span>+</span> Adicionar tarefa
+            </button>
         </section>
 
         <!-- Indicadores -->
         <section class="secao-estatisticas">
-
             <h2 class="secao__titulo">Visão geral</h2>
 
             <ul class="estatisticas">
@@ -89,97 +92,35 @@
                 </li>
 
             </ul>
-
         </section>
 
-        <!-- Cadastro de tarefas -->
-        <section class="secao-cadastro">
-
-            <div class="secao__cabecalho">
-                <div>
-                    <h2 class="secao__titulo">Nova tarefa</h2>
-                    <p class="secao__descricao">
-                        Adicione uma atividade à sua lista.
-                    </p>
-                </div>
-            </div>
-
-            <form class="formulario" id="formulario">
-
-                <div class="campo">
-                    <label class="campo__rotulo" for="titulo">
-                        Título
-                    </label>
-
-                    <input
-                        class="campo__entrada"
-                        id="titulo"
-                        type="text"
-                        placeholder="Ex.: Estudar TypeScript"
-                        autocomplete="off"
-                        required
-                    />
-                </div>
-
-                <div class="campo">
-                    <label class="campo__rotulo" for="descricao">
-                        Descrição
-                    </label>
-
-                    <textarea
-                        class="campo__entrada"
-                        id="descricao"
-                        placeholder="Descreva a tarefa..."
-                        rows="3"
-                    ></textarea>
-                </div>
-
-                <div class="campo">
-                    <label class="campo__rotulo" for="prioridade">
-                        Prioridade
-                    </label>
-
-                    <select class="campo__selecao" id="prioridade">
-
-                        <option value="baixa">Baixa</option>
-                        <option value="media" selected>Média</option>
-                        <option value="alta">Alta</option>
-
-                    </select>
-                </div>
-
-                <div class="campo">
-                    <label class="campo__rotulo" for="prazo">
-                        Prazo
-                    </label>
-
-                    <input
-                        class="campo__entrada"
-                        id="prazo"
-                        type="date"
-                    />
-                </div>
-
-                <button class="botao botao--primario" type="submit">
-                    + Adicionar tarefa
-                </button>
-
-            </form>
-
-            <p class="campo__erro" id="erro" role="alert"></p>
-
-        </section>
-
-        <!-- Lista de tarefas -->
+        <!-- Pesquisa -->
         <section class="secao-lista">
 
             <div class="secao__cabecalho">
                 <div>
                     <h2 class="secao__titulo">Minhas tarefas</h2>
                     <p class="secao__descricao">
-                        Visualize suas atividades cadastradas.
+                        Pesquise e acompanhe suas atividades.
                     </p>
                 </div>
+
+                <span class="contador-lista" id="contador-lista">
+                    0 tarefas
+                </span>
+            </div>
+
+            <div class="pesquisa">
+                <span class="pesquisa__icone" aria-hidden="true">⌕</span>
+
+                <input
+                    class="pesquisa__entrada"
+                    id="pesquisa"
+                    type="search"
+                    placeholder="Pesquisar por título ou descrição..."
+                    autocomplete="off"
+                    aria-label="Pesquisar tarefas"
+                />
             </div>
 
             <p class="aviso" id="comece-por" hidden></p>
@@ -190,7 +131,124 @@
 
     </main>
 
-    <!-- Rodapé -->
+    <!-- Modal de cadastro e edição -->
+    <dialog class="modal" id="modal-tarefa">
+
+        <div class="modal__cabecalho">
+            <div>
+                <span class="modal__destaque">GERENCIAMENTO DE ATIVIDADES</span>
+                <h2 id="titulo-modal">Nova tarefa</h2>
+                <p id="descricao-modal">
+                    Preencha as informações da sua atividade.
+                </p>
+            </div>
+
+            <button
+                class="modal__fechar"
+                id="fechar-modal"
+                type="button"
+                aria-label="Fechar janela"
+            >
+                ×
+            </button>
+        </div>
+
+        <form class="formulario" id="formulario">
+
+            <div class="campo">
+                <label class="campo__rotulo" for="titulo">
+                    Título
+                </label>
+
+                <input
+                    class="campo__entrada"
+                    id="titulo"
+                    type="text"
+                    placeholder="Ex.: Estudar TypeScript"
+                    autocomplete="off"
+                    minlength="3"
+                    required
+                />
+            </div>
+
+            <div class="campo">
+                <label class="campo__rotulo" for="descricao">
+                    Descrição
+                </label>
+
+                <textarea
+                    class="campo__entrada campo__textarea"
+                    id="descricao"
+                    placeholder="Descreva a atividade..."
+                    rows="3"
+                ></textarea>
+            </div>
+
+            <div class="formulario__linha">
+
+                <div class="campo">
+                    <label class="campo__rotulo" for="prioridade">
+                        Prioridade
+                    </label>
+
+                    <select class="campo__selecao" id="prioridade">
+                        <option value="baixa">Baixa</option>
+                        <option value="media" selected>Média</option>
+                        <option value="alta">Alta</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label class="campo__rotulo" for="status">
+                        Status
+                    </label>
+
+                    <select class="campo__selecao" id="status">
+                        <option value="nao_iniciada">Não iniciada</option>
+                        <option value="em_andamento">Em andamento</option>
+                        <option value="concluida">Concluída</option>
+                        <option value="bloqueada">Bloqueada</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="campo">
+                <label class="campo__rotulo" for="prazo">
+                    Prazo de conclusão
+                </label>
+
+                <input
+                    class="campo__entrada"
+                    id="prazo"
+                    type="date"
+                />
+            </div>
+
+            <p class="campo__erro" id="erro" role="alert"></p>
+
+            <div class="formulario__acoes">
+                <button
+                    class="botao"
+                    id="cancelar-modal"
+                    type="button"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    class="botao botao--primario"
+                    id="salvar-tarefa"
+                    type="submit"
+                >
+                    Salvar tarefa
+                </button>
+            </div>
+
+        </form>
+
+    </dialog>
+
     <footer class="rodape">
         <p>TaskFlow · Organização e produtividade</p>
     </footer>
@@ -199,4 +257,6 @@
 
 </body>
 </html>
+
+
 

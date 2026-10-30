@@ -1,53 +1,41 @@
-import type { NovaTarefa, Tarefa } from "./tipos";
 
-// Gera o próximo id a partir do maior id já existente
+import type { NovaTarefa, Tarefa, Status } from "./tipos";
+
+// Gera o próximo ID a partir do maior ID existente
 function gerarId(lista: Tarefa[]): number {
-  let maior = 0;
+    let maior = 0;
 
-  for (const tarefa of lista) {
-    if (tarefa.id > maior) {
-      maior = tarefa.id;
+    for (const tarefa of lista) {
+        if (tarefa.id > maior) {
+            maior = tarefa.id;
+        }
     }
-  }
 
-  return maior + 1;
+    return maior + 1;
 }
 
 // Cadastra uma tarefa
 export function adicionarTarefa(
-  lista: Tarefa[],
-  dados: NovaTarefa
+    lista: Tarefa[],
+    dados: NovaTarefa & { status?: Status }
 ): Tarefa {
-  if (dados.titulo.trim().length < 3) {
-    throw new Error("O título precisa ter pelo menos 3 caracteres.");
-  }
+    if (dados.titulo.trim().length < 3) {
+        throw new Error("O título precisa ter pelo menos 3 caracteres.");
+    }
 
-  const tarefa: Tarefa = {
-    ...dados,
-    id: gerarId(lista),
-    status: "nao_iniciada",
-    criadaEm: new Date(),
-  };
+    const tarefa: Tarefa = {
+        ...dados,
+        id: gerarId(lista),
+        status: dados.status ?? "nao_iniciada",
+        criadaEm: new Date(),
+    };
 
-  lista.push(tarefa);
+    lista.push(tarefa);
 
-  return tarefa;
+    return tarefa;
 }
 
-// Função de alta ordem
-export function transformar<T, R>(
-  lista: T[],
-  regra: (item: T) => R
-): R[] {
-  const resultado: R[] = [];
-
-  for (const item of lista) {
-    resultado.push(regra(item));
-  }
-
-  return resultado;
-}
-// Campos de uma tarefa que podem ser alterados
+// Campos que podem ser alterados
 export type AtualizacaoTarefa = Partial<
     Pick<
         Tarefa,
@@ -79,8 +67,11 @@ export function editarTarefa(
     return tarefa;
 }
 
-// Exclui uma tarefa pelo seu ID
-export function excluirTarefa(lista: Tarefa[], id: number): boolean {
+// Exclui uma tarefa pelo ID
+export function excluirTarefa(
+    lista: Tarefa[],
+    id: number
+): boolean {
     const indice = lista.findIndex((item) => item.id === id);
 
     if (indice === -1) {
@@ -90,4 +81,18 @@ export function excluirTarefa(lista: Tarefa[], id: number): boolean {
     lista.splice(indice, 1);
 
     return true;
+}
+
+// Função de alta ordem
+export function transformar<T, R>(
+    lista: T[],
+    regra: (item: T) => R
+): R[] {
+    const resultado: R[] = [];
+
+    for (const item of lista) {
+        resultado.push(regra(item));
+    }
+
+    return resultado;
 }
