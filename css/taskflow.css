@@ -1,64 +1,462 @@
-/* Folha de estilo de referência do TaskFlow. A turma recebe a sua pronta. */
+
 :root {
-  --fundo: #f4f6fa; --cartao: #ffffff; --texto: #1f1f1f; --suave: #5b6472;
-  --azul: #0a468c; --borda: #dfe4ec;
-  --alta: #d64545; --media: #e8892c; --baixa: #2e9e5b; --amarelo: #f9c21a;
+  --fundo: #f3f6fb;
+  --cartao: #ffffff;
+  --texto: #202b3c;
+  --suave: #788397;
+  --azul: #244f91;
+  --azul-escuro: #183966;
+  --borda: #e4e9f1;
+
+  --alta: #dc5555;
+  --media: #e69a37;
+  --baixa: #35a477;
+  --amarelo: #f5c451;
+
+  --sombra: 0 4px 16px rgba(30, 55, 90, 0.06);
 }
+
 :root[data-tema="escuro"] {
-  --fundo: #11161f; --cartao: #1a2130; --texto: #e8ecf2; --suave: #9aa5b5;
-  --azul: #6fa3e8; --borda: #2a3446;
+  --fundo: #111827;
+  --cartao: #1d293b;
+  --texto: #edf2f8;
+  --suave: #a5b1c3;
+  --azul: #6fa3e8;
+  --azul-escuro: #15243a;
+  --borda: #344258;
 }
-* { box-sizing: border-box; }
-[hidden] { display: none !important; }
-body { margin: 0; font-family: system-ui, sans-serif; background: var(--fundo); color: var(--texto); }
-.cabecalho { display: flex; justify-content: space-between; align-items: center; gap: 16px;
-  padding: 16px 24px; background: var(--azul); color: #fff; flex-wrap: wrap; }
-.cabecalho__titulo { margin: 0; font-size: 1.6rem; }
-.cabecalho__subtitulo { margin: 4px 0 0; opacity: .85; }
-.cabecalho__acoes { display: flex; gap: 8px; align-items: center; }
-main, .entrada { max-width: 880px; margin: 24px auto; padding: 0 16px; }
-.entrada { max-width: 420px; display: grid; gap: 12px; }
-.formulario { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; background: var(--cartao);
-  border: 1px solid var(--borda); border-radius: 10px; padding: 16px; }
-.entrada .formulario { flex-direction: column; align-items: stretch; }
-.entrada .campo { flex: none; }
-.formulario h2 { margin: 0; font-size: 1.2rem; }
-.campo { display: grid; gap: 4px; flex: 1 1 160px; }
-.campo__rotulo { font-size: .85rem; color: var(--suave); }
-.campo__entrada, .campo__selecao, .busca { padding: 8px 10px; border: 1px solid var(--borda); border-radius: 6px;
-  background: var(--cartao); color: var(--texto); font: inherit; }
-.campo__erro { color: var(--alta); min-height: 1.2em; margin: 8px 0; }
-.botao { padding: 8px 14px; border: 1px solid var(--borda); border-radius: 6px; background: var(--cartao);
-  color: var(--texto); font: inherit; cursor: pointer; }
-.botao--primario { background: var(--azul); color: #fff; border-color: var(--azul); }
-.botao--pequeno { padding: 4px 10px; font-size: .85rem; }
-.botao--sucesso { border-color: var(--baixa); color: var(--baixa); }
-.botao--perigo { border-color: var(--alta); color: var(--alta); }
-.aviso { background: #fff6d6; color: #5c4600; border-left: 4px solid var(--amarelo); padding: 10px 14px; border-radius: 6px; }
-.aviso--oculto { display: none; }
-.estatisticas { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-.estatistica { background: var(--cartao); border: 1px solid var(--borda); border-radius: 10px; padding: 12px; text-align: center; }
-.estatistica__numero { display: block; font-size: 1.8rem; font-weight: 700; color: var(--azul); }
-.estatistica__rotulo { font-size: .85rem; color: var(--suave); }
-.filtros { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 16px 0; }
-.filtros__grupo { display: flex; gap: 6px; flex-wrap: wrap; }
-.filtro { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--borda); background: var(--cartao); color: var(--texto); cursor: pointer; }
-.filtro--ativo { background: var(--azul); color: #fff; border-color: var(--azul); }
-.lista { list-style: none; padding: 0; display: grid; gap: 10px; }
-.tarefa { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; background: var(--cartao);
-  border: 1px solid var(--borda); border-left: 6px solid var(--media); border-radius: 10px; padding: 12px 16px; }
-.tarefa--alta { border-left-color: var(--alta); }
-.tarefa--baixa { border-left-color: var(--baixa); }
-.tarefa--concluida { opacity: .6; }
-.tarefa--concluida .tarefa__titulo { text-decoration: line-through; }
-.tarefa--atrasada { box-shadow: inset 0 0 0 2px var(--alta); }
-.tarefa__titulo { margin: 0 0 4px; font-size: 1.05rem; }
-.tarefa__descricao { margin: 0 0 6px; color: var(--suave); }
-.tarefa__meta, .tarefa__acoes { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-.etiqueta, .tag { font-size: .75rem; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--borda); }
-.etiqueta--alta { color: var(--alta); } .etiqueta--media { color: var(--media); } .etiqueta--baixa { color: var(--baixa); }
-.tag { color: var(--suave); }
-.etiqueta--status { color: var(--suave); }
-.tarefa__principal { flex: 1 1 260px; min-width: 0; }
-.vazio { text-align: center; color: var(--suave); }
-@media (max-width: 600px) { .estatisticas { grid-template-columns: repeat(2, 1fr); } }
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, sans-serif;
+  background: var(--fundo);
+  color: var(--texto);
+}
+
+/* CABEÇALHO */
+
+.cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 22px 6%;
+  background: var(--azul-escuro);
+  color: #ffffff;
+  flex-wrap: wrap;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12);
+}
+
+.cabecalho__marca {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cabecalho__icone {
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 13px;
+  background: #ffffff;
+  color: var(--azul-escuro);
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.cabecalho__titulo {
+  margin: 0;
+  font-size: 1.65rem;
+}
+
+.cabecalho__subtitulo {
+  margin: 5px 0 0;
+  font-size: 0.82rem;
+  opacity: 0.78;
+}
+
+.perfil {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.perfil__avatar {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #dceaff;
+  color: #244f91;
+  font-weight: 700;
+}
+
+.perfil__informacoes {
+  display: grid;
+  gap: 3px;
+}
+
+.perfil__nome {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.perfil__tipo {
+  font-size: 0.75rem;
+  opacity: 0.75;
+}
+
+/* CONTEÚDO */
+
+.conteudo {
+  width: min(1180px, 90%);
+  margin: 38px auto;
+}
+
+.introducao {
+  margin-bottom: 30px;
+}
+
+.introducao h2 {
+  margin: 0;
+  font-size: 1.7rem;
+  font-weight: 700;
+}
+
+.introducao p,
+.secao__descricao {
+  color: var(--suave);
+  margin: 7px 0 0;
+}
+
+/* TÍTULOS DAS SEÇÕES */
+
+.secao__titulo {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.secao__cabecalho {
+  margin-bottom: 16px;
+}
+
+/* INDICADORES */
+
+.secao-estatisticas {
+  margin-bottom: 32px;
+}
+
+.estatisticas {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.estatistica {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--cartao);
+  border: 1px solid var(--borda);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: var(--sombra);
+}
+
+.estatistica__rotulo {
+  color: var(--suave);
+  font-size: 0.82rem;
+}
+
+.estatistica__numero {
+  font-size: 2rem;
+  font-weight: 750;
+  color: var(--azul);
+}
+
+/* FORMULÁRIO */
+
+.secao-cadastro,
+.secao-lista {
+  margin-bottom: 30px;
+}
+
+.formulario {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  padding: 22px;
+  background: var(--cartao);
+  border: 1px solid var(--borda);
+  border-radius: 14px;
+  box-shadow: var(--sombra);
+}
+
+.campo {
+  display: grid;
+  gap: 8px;
+  flex: 1 1 200px;
+}
+
+.campo__rotulo {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--texto);
+}
+
+.campo__entrada,
+.campo__selecao,
+.busca {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 13px;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  background: var(--cartao);
+  color: var(--texto);
+  font: inherit;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.campo__entrada:focus,
+.campo__selecao:focus {
+  border-color: var(--azul);
+  box-shadow: 0 0 0 3px rgba(36, 79, 145, 0.12);
+}
+
+.botao {
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 1px solid var(--borda);
+  border-radius: 8px;
+  background: var(--cartao);
+  color: var(--texto);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.botao:hover {
+  transform: translateY(-1px);
+  opacity: 0.9;
+}
+
+.botao--primario {
+  background: var(--azul);
+  color: #ffffff;
+  border-color: var(--azul);
+}
+
+.botao--pequeno {
+  padding: 6px 11px;
+  min-height: 32px;
+  font-size: 0.82rem;
+}
+
+.botao--sucesso {
+  border-color: var(--baixa);
+  color: var(--baixa);
+}
+
+.botao--perigo {
+  border-color: var(--alta);
+  color: var(--alta);
+}
+
+.campo__erro {
+  color: var(--alta);
+  min-height: 1.2em;
+  margin: 8px 0;
+}
+
+/* LISTA DE TAREFAS */
+
+.lista {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 13px;
+}
+
+.tarefa {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  background: var(--cartao);
+  border: 1px solid var(--borda);
+  border-left: 5px solid var(--media);
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: var(--sombra);
+  transition: transform 0.2s;
+}
+
+.tarefa:hover {
+  transform: translateY(-2px);
+}
+
+.tarefa--alta {
+  border-left-color: var(--alta);
+}
+
+.tarefa--baixa {
+  border-left-color: var(--baixa);
+}
+
+.tarefa--concluida {
+  opacity: 0.7;
+}
+
+.tarefa--concluida .tarefa__titulo {
+  text-decoration: line-through;
+}
+
+.tarefa__titulo {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+
+.tarefa__principal {
+  flex: 1 1 260px;
+  min-width: 0;
+}
+
+.tarefa__descricao {
+  margin: 0 0 8px;
+  color: var(--suave);
+}
+
+.tarefa__meta,
+.tarefa__acoes {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.etiqueta,
+.tag,
+.status {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.76rem;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--borda);
+  font-weight: 600;
+}
+
+.etiqueta--alta {
+  color: var(--alta);
+}
+
+.etiqueta--media {
+  color: var(--media);
+}
+
+.etiqueta--baixa {
+  color: var(--baixa);
+}
+
+.tag {
+  color: var(--suave);
+}
+
+.status--nao_iniciada {
+  color: var(--suave);
+}
+
+.status--em_andamento {
+  color: var(--azul);
+}
+
+.status--concluida {
+  color: var(--baixa);
+}
+
+.status--bloqueada {
+  color: var(--alta);
+}
+
+/* AVISOS E RODAPÉ */
+
+.aviso {
+  background: #fff6d6;
+  color: #5c4600;
+  border-left: 4px solid var(--amarelo);
+  padding: 12px 15px;
+  border-radius: 8px;
+}
+
+.vazio {
+  text-align: center;
+  color: var(--suave);
+}
+
+.rodape {
+  padding: 22px;
+  text-align: center;
+  color: var(--suave);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--borda);
+}
+
+/* RESPONSIVIDADE */
+
+@media (max-width: 900px) {
+  .estatisticas {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .cabecalho {
+    padding: 18px 5%;
+  }
+
+  .conteudo {
+    width: 90%;
+    margin: 25px auto;
+  }
+
+  .estatisticas {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .estatistica {
+    padding: 15px;
+  }
+
+  .formulario {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .campo {
+    flex: none;
+  }
+
+  .botao--primario {
+    width: 100%;
+  }
+}
+

@@ -1,47 +1,165 @@
+
 <!doctype html>
 <html lang="pt-BR">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TaskFlow</title>
-  <link rel="stylesheet" href="./css/taskflow.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f5f7fb" />
+    <title>TaskFlow</title>
+    <link rel="stylesheet" href="./css/taskflow.css" />
 </head>
 
 <body>
-  <header class="cabecalho">
-    <div>
-      <h1 class="cabecalho__titulo"><span id="nome-do-sistema">—</span></h1>
-      <p class="cabecalho__subtitulo">—<span id="versao">—</span> · <span id="data-de-hoje">—</span></p>
-    </div>
-    <form class="formulario" id="formulario">
-  </header>
-  <main>
-    <ul class="estatisticas">
-      <li class="estatistica"><span class="estatistica__numero" id="total">0</span><span
-          class="estatistica__rotulo">Total</span></li>
-      <li class="estatistica"><span class="estatistica__numero" id="pendentes">0</span><span
-          class="estatistica__rotulo">Pendentes</span></li>
-    </ul>
-    <form class="formulario" id="formulario">
-      <div class="campo">
-        <label class="campo__rotulo" for="titulo">Título</label>
-        <input class="campo__entrada" id="titulo" type="text" autocomplete="off" />
-      </div>
-      <div class="campo">
-        <label class="campo__rotulo" for="prioridade">Prioridade</label>
-        <select class="campo__selecao" id="prioridade">
-          <option value="baixa">Baixa</option>
-          <option value="media" selected>Média</option>
-          <option value="alta">Alta</option>
-        </select>
-      </div>
-      <button class="botao botao--primario" type="submit">Cadastrar</button>
-    </form>
-    <p class="campo__erro" id="erro" role="alert"></p>
-    <p class="aviso" id="comece-por" hidden></p>
-    <ul class="lista" id="lista"></ul>
-  </main>
-  <script type="module" src="./src/main.ts"></script>
+
+    <!-- Cabeçalho -->
+    <header class="cabecalho">
+        <div class="cabecalho__marca">
+            <div class="cabecalho__icone">T</div>
+
+            <div>
+                <h1 class="cabecalho__titulo">
+                    <span id="nome-do-sistema">TaskFlow</span>
+                </h1>
+
+                <p class="cabecalho__subtitulo">
+                    Organização e produtividade
+                    <span id="versao">v0.2.0</span>
+                    ·
+                    <span id="data-de-hoje">—</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Área de perfil -->
+        <div class="perfil">
+            <div class="perfil__avatar">U</div>
+
+            <div class="perfil__informacoes">
+                <span class="perfil__nome">Meu perfil</span>
+                <span class="perfil__tipo">Usuário</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="conteudo">
+
+        <!-- Apresentação -->
+        <section class="introducao">
+            <div>
+                <h2>Meu painel de tarefas</h2>
+                <p>Acompanhe suas atividades e organize sua rotina.</p>
+            </div>
+        </section>
+
+        <!-- Indicadores -->
+        <section class="secao-estatisticas">
+            <h2 class="secao__titulo">Visão geral</h2>
+
+            <ul class="estatisticas">
+
+                <li class="estatistica estatistica--total">
+                    <span class="estatistica__rotulo">Total de tarefas</span>
+                    <span class="estatistica__numero" id="total">0</span>
+                </li>
+
+                <li class="estatistica estatistica--pendente">
+                    <span class="estatistica__rotulo">Não iniciadas</span>
+                    <span class="estatistica__numero" id="pendentes">0</span>
+                </li>
+
+                <li class="estatistica estatistica--andamento">
+                    <span class="estatistica__rotulo">Em andamento</span>
+                    <span class="estatistica__numero" id="em-andamento">0</span>
+                </li>
+
+                <li class="estatistica estatistica--concluida">
+                    <span class="estatistica__rotulo">Concluídas</span>
+                    <span class="estatistica__numero" id="concluidas">0</span>
+                </li>
+
+                <li class="estatistica estatistica--bloqueada">
+                    <span class="estatistica__rotulo">Bloqueadas</span>
+                    <span class="estatistica__numero" id="bloqueadas">0</span>
+                </li>
+
+            </ul>
+        </section>
+
+        <!-- Cadastro de tarefas -->
+        <section class="secao-cadastro">
+            <div class="secao__cabecalho">
+                <div>
+                    <h2 class="secao__titulo">Nova tarefa</h2>
+                    <p class="secao__descricao">
+                        Adicione uma atividade à sua lista.
+                    </p>
+                </div>
+            </div>
+
+            <form class="formulario" id="formulario">
+
+                <div class="campo">
+                    <label class="campo__rotulo" for="titulo">
+                        Título
+                    </label>
+
+                    <input
+                        class="campo__entrada"
+                        id="titulo"
+                        type="text"
+                        placeholder="Ex.: Estudar TypeScript"
+                        autocomplete="off"
+                        required
+                    />
+                </div>
+
+                <div class="campo">
+                    <label class="campo__rotulo" for="prioridade">
+                        Prioridade
+                    </label>
+
+                    <select class="campo__selecao" id="prioridade">
+                        <option value="baixa">Baixa</option>
+                        <option value="media" selected>Média</option>
+                        <option value="alta">Alta</option>
+                    </select>
+                </div>
+
+                <button class="botao botao--primario" type="submit">
+                    + Adicionar tarefa
+                </button>
+
+            </form>
+
+            <p class="campo__erro" id="erro" role="alert"></p>
+        </section>
+
+        <!-- Lista de tarefas -->
+        <section class="secao-lista">
+
+            <div class="secao__cabecalho">
+                <div>
+                    <h2 class="secao__titulo">Minhas tarefas</h2>
+                    <p class="secao__descricao">
+                        Visualize suas atividades cadastradas.
+                    </p>
+                </div>
+            </div>
+
+            <p class="aviso" id="comece-por" hidden></p>
+
+            <ul class="lista" id="lista"></ul>
+
+        </section>
+
+    </main>
+
+    <footer class="rodape">
+        <p>TaskFlow · Organização e produtividade</p>
+    </footer>
+
+    <script type="module" src="./src/main.ts"></script>
+
 </body>
 </html>
