@@ -1,53 +1,58 @@
-import type { Tarefa } from "./tipos";
+import type { Chamado } from "./tipos";
 
-export const tarefas: Tarefa[] = [
+export const chamados: Chamado[] = [
     {
         id: 1,
-        titulo: "Estudar interfaces",
-        prioridade: "alta",
-        status: "nao_iniciada",
-        tags: ["estudo", "ts"],
-        criadaEm: new Date()
+        assunto: "Erro ao acessar o sistema",
+        descricao: "Usuário não consegue realizar login na plataforma.",
+        urgencia: "alta",
+        status: "aberto",
+        tags: ["acesso", "sistema"],
+        abertoEm: new Date()
     },
     {
         id: 2,
-        titulo: "Comprar café",
-        prioridade: "baixa",
-        status: "concluida",
-        tags: ["casa"],
-        criadaEm: new Date()
+        assunto: "Solicitação de redefinição de senha",
+        descricao: "Usuário esqueceu a senha e precisa recuperar o acesso.",
+        urgencia: "baixa",
+        status: "resolvido",
+        tags: ["acesso", "senha"],
+        abertoEm: new Date()
     },
     {
         id: 3,
-        titulo: "Revisar pull request",
-        descricao: "PR #42",
-        prioridade: "alta",
-        status: "em_andamento",
-        tags: ["trabalho"],
-        criadaEm: new Date()
+        assunto: "Sistema apresentando lentidão",
+        descricao: "A plataforma demora para carregar as informações.",
+        urgencia: "alta",
+        status: "em_atendimento",
+        tags: ["sistema", "desempenho"],
+        abertoEm: new Date()
     },
     {
         id: 4,
-        titulo: "Praticar laços",
-        prioridade: "media",
-        status: "bloqueada",
-        tags: ["estudo", "ts"],
-        criadaEm: new Date()
+        assunto: "Falha na conexão com a rede",
+        descricao: "Computador não consegue acessar a rede interna.",
+        urgencia: "media",
+        status: "aberto",
+        tags: ["rede", "conectividade"],
+        abertoEm: new Date()
     },
     {
         id: 5,
-        titulo: "Agendar dentista",
-        prioridade: "media",
-        status: "nao_iniciada",
-        tags: ["saude"],
-        criadaEm: new Date()
+        assunto: "Instalação de software",
+        descricao: "Solicitação de instalação de um programa de trabalho.",
+        urgencia: "media",
+        status: "em_atendimento",
+        tags: ["software", "instalação"],
+        abertoEm: new Date()
     },
     {
         id: 6,
-        titulo: "Organizar a mesa",
-        prioridade: "baixa",
-        status: "nao_iniciada",
-        tags: ["casa"],
-        criadaEm: new Date()
-    },
+        assunto: "Problema com impressora",
+        descricao: "Impressora não está respondendo aos comandos de impressão.",
+        urgencia: "baixa",
+        status: "aberto",
+        tags: ["hardware", "impressora"],
+        abertoEm: new Date()
+    }
 ];

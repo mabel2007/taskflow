@@ -1,19 +1,29 @@
+
 {
-  "name": "taskflow_aula1_arquivos_iniciais",
+  "name": "taskflow",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "dev": "vite",
-    "verificar": "tsc --noEmit",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "description": "Sistema de gerenciamento de chamados de suporte",
   "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm:server\" \"npm:vite\"",
+    "server": "node server/index.js",
+    "vite": "vite",
+    "verificar": "tsc --noEmit",
+    "test": "echo \"Testes ainda não configurados\""
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "better-sqlite3": "^12.4.1",
+    "connect-sqlite3": "^0.9.16",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "express-session": "^1.18.2",
+    "helmet": "^8.1.0"
+  },
   "devDependencies": {
+    "concurrently": "^9.2.1",
     "typescript": "^7.0.2",
     "vite": "^8.3.5"
   }
 }
+

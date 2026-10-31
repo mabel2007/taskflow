@@ -1,37 +1,56 @@
+
 import { campo, elemento, selecao, areaTexto } from "./dom";
-import { tarefas } from "./dados";
-import type { Tarefa, Status, Prioridade } from "./tipos";
+import { chamados } from "./dados";
+import type { Chamado, StatusChamado, Urgencia } from "./tipos";
+
 import {
-    adicionarTarefa,
-    transformar,
-    editarTarefa,
-    excluirTarefa
+    adicionarChamado,
+    editarChamado,
+    excluirChamado
 } from "./servicos";
+
+import {
+    cadastrarUsuario,
+    entrarNaConta,
+    consultarSessao,
+    sairDaConta
+} from "./auth";
+
+import type { Usuario } from "./auth";
 
 // ========================================
 // DADOS E ELEMENTOS PRINCIPAIS
 // ========================================
 
-const lista: Tarefa[] = [...tarefas];
+const lista: Chamado[] = [...chamados];
 
-const modal = elemento("modal-tarefa") as HTMLDialogElement;
+const telaInicial = elemento("tela-inicial");
+const painelApp = elemento("painel-app");
+
+const modal = elemento("modal-chamado") as HTMLDialogElement;
 const formulario = elemento("formulario") as HTMLFormElement;
+
+const formularioLogin = elemento("form-login") as HTMLFormElement;
+const formularioCadastro = elemento("form-cadastro") as HTMLFormElement;
+
+const abaLogin = elemento("aba-login");
+const abaCadastro = elemento("aba-cadastro");
 
 const botaoUsuario = elemento("botao-usuario");
 const menuUsuario = elemento("menu-usuario");
 const botaoOverview = elemento("mostrar-overview");
 const overview = elemento("overview-usuario");
 
-let tarefaEmEdicao: number | null = null;
+let chamadoEmEdicao: number | null = null;
+let usuarioAtual: Usuario | null = null;
 
-const nomesStatus: Record<Status, string> = {
-    nao_iniciada: "Não iniciada",
-    em_andamento: "Em andamento",
-    concluida: "Concluída",
-    bloqueada: "Bloqueada"
+const nomesStatus: Record<StatusChamado, string> = {
+    aberto: "Aberto",
+    em_atendimento: "Em atendimento",
+    resolvido: "Resolvido"
 };
 
-const nomesPrioridade: Record<Prioridade, string> = {
+const nomesUrgencia: Record<Urgencia, string> = {
     baixa: "Baixa",
     media: "Média",
     alta: "Alta"
@@ -52,25 +71,19 @@ function dataAtual(): string {
 }
 
 function formatarData(data: string | Date): string {
-    if (data instanceof Date) {
-        const dia = String(data.getDate()).padStart(2, "0");
-        const mes = String(data.getMonth() + 1).padStart(2, "0");
-        const ano = data.getFullYear();
+    const valor = data instanceof Date ? data : new Date(data);
 
-        return `${dia}/${mes}/${ano}`;
+    if (Number.isNaN(valor.getTime())) {
+        return "Não informado";
     }
 
-    if (!data) return "Não informado";
-
-    const [ano, mes, dia] = data.split("-");
-
-    if (!ano || !mes || !dia) return "Não informado";
-
-    return `${dia}/${mes}/${ano}`;
+    return valor.toLocaleDateString("pt-BR");
 }
 
-function dataCriacao(tarefa: Tarefa): string {
-    const data = tarefa.criadaEm;
+function dataAbertura(chamado: Chamado): string {
+    const data = chamado.abertoEm instanceof Date
+        ? chamado.abertoEm
+        : new Date(chamado.abertoEm);
 
     const ano = data.getFullYear();
     const mes = String(data.getMonth() + 1).padStart(2, "0");
@@ -80,24 +93,147 @@ function dataCriacao(tarefa: Tarefa): string {
 }
 
 // ========================================
-// SITUAÇÃO DO PRAZO
+// TELA DE LOGIN E CADASTRO
 // ========================================
 
-function estaAtrasada(tarefa: Tarefa): boolean {
-    return Boolean(
-        tarefa.status !== "concluida" &&
-        tarefa.prazo &&
-        tarefa.prazo < dataAtual()
-    );
+function mostrarFormularioAcesso(
+    tipo: "login" | "cadastro"
+): void {
+    const loginAtivo = tipo === "login";
+
+    formularioLogin.hidden = !loginAtivo;
+    formularioCadastro.hidden = loginAtivo;
+
+    abaLogin.classList.toggle("ativa", loginAtivo);
+    abaCadastro.classList.toggle("ativa", !loginAtivo);
+
+    abaLogin.setAttribute("aria-selected", String(loginAtivo));
+    abaCadastro.setAttribute("aria-selected", String(!loginAtivo));
+
+    elemento("erro-login").textContent = "";
+    elemento("erro-cadastro").textContent = "";
 }
 
-function estaNoPrazo(tarefa: Tarefa): boolean {
-    return Boolean(
-        tarefa.status !== "concluida" &&
-        tarefa.prazo &&
-        tarefa.prazo >= dataAtual()
-    );
+abaLogin.addEventListener("click", () => {
+    mostrarFormularioAcesso("login");
+});
+
+abaCadastro.addEventListener("click", () => {
+    mostrarFormularioAcesso("cadastro");
+});
+
+// ========================================
+// AUTENTICAÇÃO E IDENTIFICAÇÃO
+// ========================================
+
+function mostrarPainel(usuario: Usuario): void {
+    usuarioAtual = usuario;
+
+    telaInicial.hidden = true;
+    painelApp.hidden = false;
+
+    elemento("usuario-nome").textContent = usuario.nome;
+    elemento("usuario-email").textContent = usuario.email;
+
+    const iniciais = usuario.nome
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((parte) => parte.charAt(0).toUpperCase())
+        .join("");
+
+    botaoUsuario.textContent = iniciais;
+    elemento("usuario-nome").textContent = usuario.nome;
+
+    desenhar();
 }
+
+function mostrarTelaInicial(): void {
+    usuarioAtual = null;
+
+    painelApp.hidden = true;
+    telaInicial.hidden = false;
+
+    fecharMenuUsuario();
+    mostrarFormularioAcesso("login");
+
+    formularioLogin.reset();
+    formularioCadastro.reset();
+}
+
+formularioLogin.addEventListener("submit", async (evento) => {
+    evento.preventDefault();
+
+    const email = campo("login-email").value.trim();
+    const senha = campo("login-senha").value;
+
+    const erro = elemento("erro-login");
+    erro.textContent = "";
+
+    const botao = formularioLogin.querySelector(
+        'button[type="submit"]'
+    ) as HTMLButtonElement;
+
+    botao.disabled = true;
+    botao.textContent = "Entrando...";
+
+    try {
+        const usuario = await entrarNaConta(email, senha);
+
+        mostrarPainel(usuario);
+        formularioLogin.reset();
+
+    } catch (erroRecebido) {
+        erro.textContent = erroRecebido instanceof Error
+            ? erroRecebido.message
+            : "Não foi possível entrar na sua conta.";
+
+    } finally {
+        botao.disabled = false;
+        botao.textContent = "Entrar";
+    }
+});
+
+formularioCadastro.addEventListener("submit", async (evento) => {
+    evento.preventDefault();
+
+    const nome = campo("cadastro-nome").value.trim();
+    const email = campo("cadastro-email").value.trim();
+    const senha = campo("cadastro-senha").value;
+    const confirmacao = campo("cadastro-confirmacao").value;
+
+    const erro = elemento("erro-cadastro");
+    erro.textContent = "";
+
+    if (senha !== confirmacao) {
+        erro.textContent = "As senhas não coincidem.";
+        campo("cadastro-confirmacao").focus();
+        return;
+    }
+
+    const botao = formularioCadastro.querySelector(
+        'button[type="submit"]'
+    ) as HTMLButtonElement;
+
+    botao.disabled = true;
+    botao.textContent = "Criando conta...";
+
+    try {
+        const usuario = await cadastrarUsuario(nome, email, senha);
+
+        mostrarPainel(usuario);
+        formularioCadastro.reset();
+
+    } catch (erroRecebido) {
+        erro.textContent = erroRecebido instanceof Error
+            ? erroRecebido.message
+            : "Não foi possível criar sua conta.";
+
+    } finally {
+        botao.disabled = false;
+        botao.textContent = "Criar conta";
+    }
+});
 
 // ========================================
 // MENU DO USUÁRIO
@@ -124,37 +260,6 @@ function alternarOverview(): void {
     atualizarOverview();
 }
 
-function atualizarOverview(): void {
-    const total = lista.length;
-
-    const concluidas = lista.filter(
-        (tarefa) => tarefa.status === "concluida"
-    ).length;
-
-    const andamento = lista.filter(
-        (tarefa) => tarefa.status === "em_andamento"
-    ).length;
-
-    const bloqueadas = lista.filter(
-        (tarefa) => tarefa.status === "bloqueada"
-    ).length;
-
-    const pendentes = lista.filter(
-        (tarefa) => tarefa.status === "nao_iniciada"
-    ).length;
-
-    const percentual = total > 0
-        ? Math.round((concluidas / total) * 100)
-        : 0;
-
-    elemento("overview-total").textContent = String(total);
-    elemento("overview-concluidas").textContent = String(concluidas);
-    elemento("overview-andamento").textContent = String(andamento);
-    elemento("overview-bloqueadas").textContent = String(bloqueadas);
-    elemento("overview-pendentes").textContent = String(pendentes);
-    elemento("overview-percentual").textContent = `${percentual}%`;
-}
-
 botaoUsuario.addEventListener("click", (evento) => {
     evento.stopPropagation();
     alternarMenuUsuario();
@@ -169,33 +274,64 @@ document.addEventListener("click", fecharMenuUsuario);
 botaoOverview.addEventListener("click", alternarOverview);
 
 // ========================================
-// AÇÃO SAIR
+// LOGOUT
 // ========================================
 
-elemento("acao-sair").addEventListener("click", () => {
-    alert(
-        "A autenticação ainda não foi implementada. " +
-        "Quando criarmos o login, esta opção encerrará a sessão."
-    );
+elemento("acao-sair").addEventListener("click", async () => {
+    try {
+        await sairDaConta();
 
-    fecharMenuUsuario();
+        mostrarTelaInicial();
+
+    } catch (erro) {
+        alert(
+            erro instanceof Error
+                ? erro.message
+                : "Não foi possível sair da conta."
+        );
+    }
 });
 
 // ========================================
-// MODAL - CADASTRO
+// OVERVIEW
+// ========================================
+
+function atualizarOverview(): void {
+    const total = lista.length;
+
+    const abertos = lista.filter(
+        (chamado) => chamado.status === "aberto"
+    ).length;
+
+    const atendimento = lista.filter(
+        (chamado) => chamado.status === "em_atendimento"
+    ).length;
+
+    const resolvidos = lista.filter(
+        (chamado) => chamado.status === "resolvido"
+    ).length;
+
+    elemento("overview-total").textContent = String(total);
+    elemento("overview-abertos").textContent = String(abertos);
+    elemento("overview-atendimento").textContent = String(atendimento);
+    elemento("overview-resolvidos").textContent = String(resolvidos);
+}
+
+// ========================================
+// MODAL - ABRIR CHAMADO
 // ========================================
 
 function abrirCadastro(): void {
-    tarefaEmEdicao = null;
+    chamadoEmEdicao = null;
 
     formulario.reset();
 
-    selecao("prioridade").value = "media";
-    selecao("status").value = "nao_iniciada";
+    selecao("urgencia").value = "media";
+    selecao("status").value = "aberto";
 
-    elemento("titulo-modal").textContent = "Adicionar tarefa";
+    elemento("titulo-modal").textContent = "Abrir chamado";
     elemento("descricao-modal").textContent =
-        "Preencha os dados da nova tarefa.";
+        "Preencha os dados da solicitação de suporte.";
 
     elemento("erro").textContent = "";
 
@@ -203,23 +339,23 @@ function abrirCadastro(): void {
 }
 
 // ========================================
-// MODAL - EDIÇÃO
+// MODAL - EDITAR CHAMADO
 // ========================================
 
-function abrirEdicao(tarefa: Tarefa): void {
-    tarefaEmEdicao = tarefa.id;
+function abrirEdicao(chamado: Chamado): void {
+    chamadoEmEdicao = chamado.id;
 
-    campo("titulo").value = tarefa.titulo;
-    areaTexto("descricao").value = tarefa.descricao ?? "";
+    campo("assunto").value = chamado.assunto;
+    areaTexto("descricao").value = chamado.descricao ?? "";
 
-    selecao("prioridade").value = tarefa.prioridade;
-    selecao("status").value = tarefa.status;
+    selecao("urgencia").value = chamado.urgencia;
+    selecao("status").value = chamado.status;
 
-    campo("prazo").value = tarefa.prazo ?? "";
+    campo("tags").value = chamado.tags.join(", ");
 
-    elemento("titulo-modal").textContent = "Editar tarefa";
+    elemento("titulo-modal").textContent = "Editar chamado";
     elemento("descricao-modal").textContent =
-        "Atualize as informações da tarefa.";
+        "Atualize as informações da solicitação.";
 
     elemento("erro").textContent = "";
 
@@ -230,73 +366,64 @@ function abrirEdicao(tarefa: Tarefa): void {
 // CRIAÇÃO DOS CARTÕES
 // ========================================
 
-function criarItem(tarefa: Tarefa): HTMLElement {
+function criarItem(chamado: Chamado): HTMLElement {
     const cartao = document.createElement("article");
-    cartao.className = `tarefa tarefa--${tarefa.prioridade}`;
+
+    cartao.className = `chamado chamado--${chamado.urgencia}`;
 
     const principal = document.createElement("div");
-    principal.className = "tarefa__principal";
+    principal.className = "chamado__principal";
 
     const titulo = document.createElement("h3");
-    titulo.textContent = tarefa.titulo;
+    titulo.textContent = chamado.assunto;
 
     principal.appendChild(titulo);
 
-    if (tarefa.descricao) {
+    if (chamado.descricao) {
         const descricao = document.createElement("p");
-        descricao.textContent = tarefa.descricao;
+        descricao.textContent = chamado.descricao;
+
         principal.appendChild(descricao);
     }
 
     const metadados = document.createElement("div");
-    metadados.className = "tarefa__meta";
+    metadados.className = "chamado__meta";
 
-    const prioridade = document.createElement("span");
-    prioridade.className = "etiqueta";
-    prioridade.textContent =
-        `Prioridade: ${nomesPrioridade[tarefa.prioridade]}`;
+    const urgencia = document.createElement("span");
+    urgencia.className = "etiqueta";
+    urgencia.textContent =
+        `Urgência: ${nomesUrgencia[chamado.urgencia]}`;
 
     const status = document.createElement("span");
-    status.className = `etiqueta status--${tarefa.status}`;
-    status.textContent = nomesStatus[tarefa.status];
+    status.className = `etiqueta status--${chamado.status}`;
+    status.textContent = nomesStatus[chamado.status];
 
-    const criacao = document.createElement("span");
-    criacao.className = "etiqueta";
-    criacao.textContent = `Criada em: ${formatarData(tarefa.criadaEm)}`;
+    const abertura = document.createElement("span");
+    abertura.className = "etiqueta";
+    abertura.textContent =
+        `Aberto em: ${formatarData(chamado.abertoEm)}`;
 
-    metadados.append(prioridade, status, criacao);
+    metadados.append(urgencia, status, abertura);
 
-    if (tarefa.prazo) {
-        const prazo = document.createElement("span");
-        prazo.className = "etiqueta";
-        prazo.textContent = `Prazo: ${formatarData(tarefa.prazo)}`;
+    for (const tag of chamado.tags) {
+        const etiqueta = document.createElement("span");
+        etiqueta.className = "etiqueta";
+        etiqueta.textContent = `#${tag}`;
 
-        metadados.appendChild(prazo);
-
-        if (estaAtrasada(tarefa)) {
-            const atraso = document.createElement("span");
-            atraso.className = "etiqueta status--bloqueada";
-            atraso.textContent = "Em atraso";
-            metadados.appendChild(atraso);
-        } else if (estaNoPrazo(tarefa)) {
-            const noPrazo = document.createElement("span");
-            noPrazo.className = "etiqueta status--concluida";
-            noPrazo.textContent = "No prazo";
-            metadados.appendChild(noPrazo);
-        }
+        metadados.appendChild(etiqueta);
     }
 
     principal.appendChild(metadados);
 
     const acoes = document.createElement("div");
-    acoes.className = "tarefa__acoes";
+    acoes.className = "chamado__acoes";
 
     const editar = document.createElement("button");
     editar.type = "button";
     editar.textContent = "Editar";
 
     editar.addEventListener("click", () => {
-        abrirEdicao(tarefa);
+        abrirEdicao(chamado);
     });
 
     const excluir = document.createElement("button");
@@ -305,11 +432,11 @@ function criarItem(tarefa: Tarefa): HTMLElement {
 
     excluir.addEventListener("click", () => {
         const confirmar = confirm(
-            `Deseja realmente excluir a tarefa "${tarefa.titulo}"?`
+            `Deseja realmente excluir o chamado "${chamado.assunto}"?`
         );
 
         if (confirmar) {
-            excluirTarefa(lista, tarefa.id);
+            excluirChamado(lista, chamado.id);
             desenhar();
         }
     });
@@ -321,76 +448,65 @@ function criarItem(tarefa: Tarefa): HTMLElement {
 }
 
 // ========================================
-// INDICADORES PRINCIPAIS
+// INDICADORES
 // ========================================
 
 function atualizarIndicadores(): void {
     const total = lista.length;
 
-    const pendentes = lista.filter(
-        (tarefa) => tarefa.status === "nao_iniciada"
+    const abertos = lista.filter(
+        (chamado) => chamado.status === "aberto"
     ).length;
 
-    const andamento = lista.filter(
-        (tarefa) => tarefa.status === "em_andamento"
+    const atendimento = lista.filter(
+        (chamado) => chamado.status === "em_atendimento"
     ).length;
 
-    const concluidas = lista.filter(
-        (tarefa) => tarefa.status === "concluida"
-    ).length;
-
-    const bloqueadas = lista.filter(
-        (tarefa) => tarefa.status === "bloqueada"
+    const resolvidos = lista.filter(
+        (chamado) => chamado.status === "resolvido"
     ).length;
 
     elemento("total").textContent = String(total);
-    elemento("pendentes").textContent = String(pendentes);
-    elemento("em-andamento").textContent = String(andamento);
-    elemento("concluidas").textContent = String(concluidas);
-    elemento("bloqueadas").textContent = String(bloqueadas);
+    elemento("abertos").textContent = String(abertos);
+    elemento("em-atendimento").textContent = String(atendimento);
+    elemento("resolvidos").textContent = String(resolvidos);
 
     atualizarOverview();
 }
 
 // ========================================
-// FILTROS E PESQUISA
+// PESQUISA E FILTROS
 // ========================================
 
 function desenhar(): void {
     const texto = campo("pesquisa").value.trim().toLowerCase();
 
     const dataSelecionada = campo("filtro-data").value;
-    const prazoSelecionado = selecao("filtro-prazo").value;
-    const prioridadeSelecionada = selecao("filtro-prioridade").value;
+    const urgenciaSelecionada = selecao("filtro-urgencia").value;
     const statusSelecionado = selecao("filtro-status").value;
 
-    const filtradas = lista.filter((tarefa) => {
+    const filtradas = lista.filter((chamado) => {
         const correspondeTexto =
-            tarefa.titulo.toLowerCase().includes(texto) ||
-            (tarefa.descricao ?? "").toLowerCase().includes(texto);
+            chamado.assunto.toLowerCase().includes(texto) ||
+            (chamado.descricao ?? "").toLowerCase().includes(texto) ||
+            chamado.tags.some((tag) => tag.toLowerCase().includes(texto));
 
         const correspondeData =
             !dataSelecionada ||
-            dataCriacao(tarefa) === dataSelecionada;
+            dataAbertura(chamado) === dataSelecionada;
 
-        const correspondePrazo =
-            !prazoSelecionado ||
-            (prazoSelecionado === "em_atraso" && estaAtrasada(tarefa)) ||
-            (prazoSelecionado === "no_prazo" && estaNoPrazo(tarefa));
-
-        const correspondePrioridade =
-            !prioridadeSelecionada ||
-            tarefa.prioridade === prioridadeSelecionada;
+        const correspondeUrgencia =
+            !urgenciaSelecionada ||
+            chamado.urgencia === urgenciaSelecionada;
 
         const correspondeStatus =
             !statusSelecionado ||
-            tarefa.status === statusSelecionado;
+            chamado.status === statusSelecionado;
 
         return (
             correspondeTexto &&
             correspondeData &&
-            correspondePrazo &&
-            correspondePrioridade &&
+            correspondeUrgencia &&
             correspondeStatus
         );
     });
@@ -398,14 +514,12 @@ function desenhar(): void {
     const listaElemento = elemento("lista");
     listaElemento.innerHTML = "";
 
-    const itens = transformar(filtradas, criarItem);
-
-    for (const item of itens) {
-        listaElemento.appendChild(item);
+    for (const chamado of filtradas) {
+        listaElemento.appendChild(criarItem(chamado));
     }
 
     elemento("contador-lista").textContent =
-        `${filtradas.length} de ${lista.length} tarefa(s)`;
+        `${filtradas.length} de ${lista.length} chamado(s)`;
 
     elemento("comece-por").hidden = filtradas.length > 0;
 
@@ -420,8 +534,7 @@ function limparFiltros(): void {
     campo("pesquisa").value = "";
     campo("filtro-data").value = "";
 
-    selecao("filtro-prazo").value = "";
-    selecao("filtro-prioridade").value = "";
+    selecao("filtro-urgencia").value = "";
     selecao("filtro-status").value = "";
 
     desenhar();
@@ -434,8 +547,7 @@ function limparFiltros(): void {
 campo("pesquisa").addEventListener("input", desenhar);
 campo("filtro-data").addEventListener("change", desenhar);
 
-selecao("filtro-prazo").addEventListener("change", desenhar);
-selecao("filtro-prioridade").addEventListener("change", desenhar);
+selecao("filtro-urgencia").addEventListener("change", desenhar);
 selecao("filtro-status").addEventListener("change", desenhar);
 
 elemento("limpar-filtros").addEventListener("click", limparFiltros);
@@ -457,36 +569,40 @@ elemento("cancelar-modal").addEventListener("click", () => {
 formulario.addEventListener("submit", (evento) => {
     evento.preventDefault();
 
-    const titulo = campo("titulo").value.trim();
+    const assunto = campo("assunto").value.trim();
     const descricao = areaTexto("descricao").value.trim();
-    const prioridade = selecao("prioridade").value as Prioridade;
-    const status = selecao("status").value as Status;
-    const prazo = campo("prazo").value || null;
+
+    const urgencia = selecao("urgencia").value as Urgencia;
+    const status = selecao("status").value as StatusChamado;
+
+    const tags = campo("tags").value
+        .split(",")
+        .map((tag) => tag.trim())
+        .filter((tag) => tag.length > 0);
 
     try {
-        if (tarefaEmEdicao !== null) {
-            editarTarefa(lista, tarefaEmEdicao, {
-                titulo,
+        if (chamadoEmEdicao !== null) {
+            editarChamado(lista, chamadoEmEdicao, {
+                assunto,
                 descricao,
-                prioridade,
+                urgencia,
                 status,
-                prazo
+                tags
             });
         } else {
-            adicionarTarefa(lista, {
-                titulo,
+            adicionarChamado(lista, {
+                assunto,
                 descricao,
-                prioridade,
+                urgencia,
                 status,
-                prazo,
-                tags: []
+                tags
             });
         }
 
         modal.close();
         formulario.reset();
 
-        tarefaEmEdicao = null;
+        chamadoEmEdicao = null;
 
         desenhar();
 
@@ -494,62 +610,34 @@ formulario.addEventListener("submit", (evento) => {
         elemento("erro").textContent =
             erro instanceof Error
                 ? erro.message
-                : "Não foi possível salvar a tarefa.";
+                : "Não foi possível salvar o chamado.";
     }
-});
-
-
-// ========================================
-// TELA INICIAL - LOGIN E CADASTRO
-// ========================================
-
-const abaLogin = elemento("aba-login");
-const abaCadastro = elemento("aba-cadastro");
-const formularioLogin = elemento("form-login") as HTMLFormElement;
-const formularioCadastro = elemento("form-cadastro") as HTMLFormElement;
-
-function mostrarFormularioAcesso(tipo: "login" | "cadastro"): void {
-    const loginAtivo = tipo === "login";
-    formularioLogin.hidden = !loginAtivo;
-    formularioCadastro.hidden = loginAtivo;
-    abaLogin.classList.toggle("ativa", loginAtivo);
-    abaCadastro.classList.toggle("ativa", !loginAtivo);
-    abaLogin.setAttribute("aria-selected", String(loginAtivo));
-    abaCadastro.setAttribute("aria-selected", String(!loginAtivo));
-    elemento("erro-login").textContent = "";
-    elemento("erro-cadastro").textContent = "";
-}
-
-abaLogin.addEventListener("click", () => mostrarFormularioAcesso("login"));
-abaCadastro.addEventListener("click", () => mostrarFormularioAcesso("cadastro"));
-
-formularioLogin.addEventListener("submit", (evento) => {
-    evento.preventDefault();
-    elemento("erro-login").textContent =
-        "O login ainda não está conectado ao servidor. Sua senha não foi enviada nem armazenada.";
-});
-
-formularioCadastro.addEventListener("submit", (evento) => {
-    evento.preventDefault();
-    const senha = campo("cadastro-senha").value;
-    const confirmacao = campo("cadastro-confirmacao").value;
-
-    if (senha !== confirmacao) {
-        elemento("erro-cadastro").textContent = "As senhas não coincidem.";
-        campo("cadastro-confirmacao").focus();
-        return;
-    }
-
-    elemento("erro-cadastro").textContent =
-        "O cadastro ainda não está conectado ao servidor. Nenhuma senha foi armazenada.";
 });
 
 // ========================================
 // INICIALIZAÇÃO
 // ========================================
 
-elemento("data-de-hoje").textContent =
-    new Date().toLocaleDateString("pt-BR");
+async function iniciarAplicacao(): Promise<void> {
+    elemento("data-de-hoje").textContent =
+        new Date().toLocaleDateString("pt-BR");
 
-desenhar();
+    mostrarFormularioAcesso("login");
 
+    try {
+        const usuario = await consultarSessao();
+
+        if (usuario) {
+            mostrarPainel(usuario);
+        } else {
+            mostrarTelaInicial();
+        }
+
+    } catch (erro) {
+        console.error("Erro ao consultar sessão:", erro);
+
+        mostrarTelaInicial();
+    }
+}
+
+iniciarAplicacao();

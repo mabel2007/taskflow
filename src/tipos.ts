@@ -1,20 +1,21 @@
-export type Prioridade = "baixa" | "media" | "alta";
+export type Urgencia = "baixa" | "media" | "alta";
 
-export type Status =
-  | "nao_iniciada"
-  | "em_andamento"
-  | "concluida"
-  | "bloqueada";
+export type StatusChamado =
+    | "aberto"
+    | "em_atendimento"
+    | "resolvido";
 
-export interface Tarefa {
-  readonly id: number;
-  titulo: string;
-  descricao?: string | null;
-  prioridade: Prioridade;
-  status: Status;
-  tags: string[];
-  prazo?: string | null;
-  criadaEm: Date;
+export interface Chamado {
+    readonly id: number;
+    assunto: string;
+    descricao?: string | null;
+    urgencia: Urgencia;
+    status: StatusChamado;
+    tags: string[];
+    abertoEm: Date;
 }
 
-export type NovaTarefa = Omit<Tarefa, "id" | "status" | "criadaEm">;
+export type NovoChamado = Omit<
+    Chamado,
+    "id" | "status" | "abertoEm"
+>;

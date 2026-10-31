@@ -1,78 +1,89 @@
-
-import type { NovaTarefa, Tarefa, Status } from "./tipos";
+import type {
+    NovoChamado,
+    Chamado,
+    StatusChamado
+} from "./tipos";
 
 // Gera o próximo ID a partir do maior ID existente
-function gerarId(lista: Tarefa[]): number {
+function gerarId(lista: Chamado[]): number {
     let maior = 0;
 
-    for (const tarefa of lista) {
-        if (tarefa.id > maior) {
-            maior = tarefa.id;
+    for (const chamado of lista) {
+        if (chamado.id > maior) {
+            maior = chamado.id;
         }
     }
 
     return maior + 1;
 }
 
-// Cadastra uma tarefa
-export function adicionarTarefa(
-    lista: Tarefa[],
-    dados: NovaTarefa & { status?: Status }
-): Tarefa {
-    if (dados.titulo.trim().length < 3) {
-        throw new Error("O título precisa ter pelo menos 3 caracteres.");
+// Cadastra um novo chamado
+export function adicionarChamado(
+    lista: Chamado[],
+    dados: NovoChamado & { status?: StatusChamado }
+): Chamado {
+    if (dados.assunto.trim().length < 3) {
+        throw new Error(
+            "O assunto precisa ter pelo menos 3 caracteres."
+        );
     }
 
-    const tarefa: Tarefa = {
+    const chamado: Chamado = {
         ...dados,
         id: gerarId(lista),
-        status: dados.status ?? "nao_iniciada",
-        criadaEm: new Date(),
+        status: dados.status ?? "aberto",
+        abertoEm: new Date()
     };
 
-    lista.push(tarefa);
+    lista.push(chamado);
 
-    return tarefa;
+    return chamado;
 }
 
 // Campos que podem ser alterados
-export type AtualizacaoTarefa = Partial<
+export type AtualizacaoChamado = Partial<
     Pick<
-        Tarefa,
-        "titulo" | "descricao" | "prioridade" | "status" | "tags" | "prazo"
+        Chamado,
+        "assunto" | "descricao" | "urgencia" | "status" | "tags"
     >
 >;
 
-// Edita uma tarefa existente
-export function editarTarefa(
-    lista: Tarefa[],
+// Edita um chamado existente
+export function editarChamado(
+    lista: Chamado[],
     id: number,
-    dados: AtualizacaoTarefa
-): Tarefa {
-    const tarefa = lista.find((item) => item.id === id);
+    dados: AtualizacaoChamado
+): Chamado {
+    const chamado = lista.find(
+        (item) => item.id === id
+    );
 
-    if (!tarefa) {
-        throw new Error("Tarefa não encontrada.");
+    if (!chamado) {
+        throw new Error("Chamado não encontrado.");
     }
 
     if (
-        dados.titulo !== undefined &&
-        dados.titulo.trim().length < 3
+        dados.assunto !== undefined &&
+        dados.assunto.trim().length < 3
     ) {
-        throw new Error("O título precisa ter pelo menos 3 caracteres.");
+        throw new Error(
+            "O assunto precisa ter pelo menos 3 caracteres."
+        );
     }
 
-    Object.assign(tarefa, dados);
+    Object.assign(chamado, dados);
 
-    return tarefa;
+    return chamado;
 }
 
-// Exclui uma tarefa pelo ID
-export function excluirTarefa(
-    lista: Tarefa[],
+// Exclui um chamado pelo ID
+export function excluirChamado(
+    lista: Chamado[],
     id: number
 ): boolean {
-    const indice = lista.findIndex((item) => item.id === id);
+    const indice = lista.findIndex(
+        (item) => item.id === id
+    );
 
     if (indice === -1) {
         return false;

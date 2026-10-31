@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaskFlow</title>
+    <title>TaskFlow | Chamados de Suporte</title>
     <link rel="stylesheet" href="./css/taskflow.css">
 
     <style>
@@ -147,316 +148,428 @@
 
 <body>
 
+    <!-- TELA INICIAL / LOGIN E CADASTRO -->
     <section id="tela-inicial" class="tela-inicial">
         <div class="inicio-container">
+
             <div class="marca-taskflow" aria-label="TaskFlow">
                 <span class="marca-icone" aria-hidden="true">✓</span>
                 <span>Task<span>Flow</span></span>
             </div>
-            <h1>Organize suas tarefas.<br><span>Simplifique seu dia.</span></h1>
-            <p class="inicio-subtitulo">Gerencie suas atividades em um só lugar.</p>
+
+            <h1>
+                Gerencie seus chamados.<br>
+                <span>Simplifique seu suporte.</span>
+            </h1>
+
+            <p class="inicio-subtitulo">
+                Registre solicitações, acompanhe atendimentos e organize o suporte em um só lugar.
+            </p>
 
             <div class="cartao-autenticacao">
+
                 <div class="abas-autenticacao" role="tablist" aria-label="Acesso à conta">
-                    <button type="button" id="aba-login" class="aba-autenticacao ativa" role="tab" aria-selected="true">Entrar</button>
-                    <button type="button" id="aba-cadastro" class="aba-autenticacao" role="tab" aria-selected="false">Criar conta</button>
+                    <button
+                        type="button"
+                        id="aba-login"
+                        class="aba-autenticacao ativa"
+                        role="tab"
+                        aria-selected="true"
+                    >
+                        Entrar
+                    </button>
+
+                    <button
+                        type="button"
+                        id="aba-cadastro"
+                        class="aba-autenticacao"
+                        role="tab"
+                        aria-selected="false"
+                    >
+                        Criar conta
+                    </button>
                 </div>
 
                 <form id="form-login" class="form-autenticacao">
                     <h2>Bem-vinda de volta!</h2>
                     <p>Acesse sua conta para continuar.</p>
+
                     <label for="login-email">E-mail</label>
-                    <input type="email" id="login-email" autocomplete="email" placeholder="voce@exemplo.com" required>
+                    <input
+                        type="email"
+                        id="login-email"
+                        autocomplete="email"
+                        placeholder="voce@exemplo.com"
+                        required
+                    >
+
                     <label for="login-senha">Senha</label>
-                    <input type="password" id="login-senha" autocomplete="current-password" placeholder="Sua senha" required minlength="8">
-                    <p id="erro-login" class="mensagem-autenticacao" role="alert" aria-live="polite"></p>
-                    <button type="submit" class="botao-autenticacao">Entrar</button>
+                    <input
+                        type="password"
+                        id="login-senha"
+                        autocomplete="current-password"
+                        placeholder="Sua senha"
+                        required
+                        minlength="8"
+                    >
+
+                    <p
+                        id="erro-login"
+                        class="mensagem-autenticacao"
+                        role="alert"
+                        aria-live="polite"
+                    ></p>
+
+                    <button type="submit" class="botao-autenticacao">
+                        Entrar
+                    </button>
                 </form>
 
                 <form id="form-cadastro" class="form-autenticacao" hidden>
                     <h2>Crie sua conta</h2>
-                    <p>Comece a organizar sua rotina.</p>
+                    <p>Comece a organizar seus chamados.</p>
+
                     <label for="cadastro-nome">Nome</label>
-                    <input type="text" id="cadastro-nome" autocomplete="name" placeholder="Seu nome" required minlength="2">
+                    <input
+                        type="text"
+                        id="cadastro-nome"
+                        autocomplete="name"
+                        placeholder="Seu nome"
+                        required
+                        minlength="2"
+                    >
+
                     <label for="cadastro-email">E-mail</label>
-                    <input type="email" id="cadastro-email" autocomplete="email" placeholder="voce@exemplo.com" required>
+                    <input
+                        type="email"
+                        id="cadastro-email"
+                        autocomplete="email"
+                        placeholder="voce@exemplo.com"
+                        required
+                    >
+
                     <label for="cadastro-senha">Senha</label>
-                    <input type="password" id="cadastro-senha" autocomplete="new-password" placeholder="Mínimo de 8 caracteres" required minlength="8">
+                    <input
+                        type="password"
+                        id="cadastro-senha"
+                        autocomplete="new-password"
+                        placeholder="Mínimo de 8 caracteres"
+                        required
+                        minlength="8"
+                    >
+
                     <label for="cadastro-confirmacao">Confirmar senha</label>
-                    <input type="password" id="cadastro-confirmacao" autocomplete="new-password" placeholder="Digite a senha novamente" required minlength="8">
-                    <p id="erro-cadastro" class="mensagem-autenticacao" role="alert" aria-live="polite"></p>
-                    <button type="submit" class="botao-autenticacao">Criar conta</button>
+                    <input
+                        type="password"
+                        id="cadastro-confirmacao"
+                        autocomplete="new-password"
+                        placeholder="Digite a senha novamente"
+                        required
+                        minlength="8"
+                    >
+
+                    <p
+                        id="erro-cadastro"
+                        class="mensagem-autenticacao"
+                        role="alert"
+                        aria-live="polite"
+                    ></p>
+
+                    <button type="submit" class="botao-autenticacao">
+                        Criar conta
+                    </button>
                 </form>
-                <p class="aviso-autenticacao">A conexão segura de login e cadastro será ativada quando o backend estiver configurado.</p>
+
+                <p class="aviso-autenticacao">
+                    A conexão segura de login e cadastro será ativada quando o backend estiver configurado.
+                </p>
+
             </div>
         </div>
     </section>
 
+    <!-- PAINEL PRINCIPAL -->
     <div id="painel-app" class="painel-app" hidden>
 
-    <header>
-        <div class="cabecalho-conteudo">
-            <div>
-                <h1 id="nome-do-sistema">TaskFlow</h1>
-                <p>Organize suas tarefas e acompanhe seu progresso.</p>
-                <p>
-                    <span id="versao">Versão 1.0</span> |
-                    <span id="data-de-hoje"></span>
-                </p>
-            </div>
+        <header>
+            <div class="cabecalho-conteudo">
 
-            <div class="usuario-area">
-                <button
-                    type="button"
-                    id="botao-usuario"
-                    class="usuario-avatar"
-                    aria-label="Abrir menu do usuário"
-                    aria-expanded="false"
+                <div>
+                    <h1 id="nome-do-sistema">TaskFlow</h1>
+
+                    <p>
+                        Sistema de gerenciamento de chamados de suporte.
+                    </p>
+
+                    <p>
+                        <span id="versao">Versão 1.0</span> |
+                        <span id="data-de-hoje"></span>
+                    </p>
+                </div>
+
+                <!-- MENU DO USUÁRIO -->
+                <div class="usuario-area">
+
+                    <button
+                        type="button"
+                        id="botao-usuario"
+                        class="usuario-avatar"
+                        aria-label="Abrir menu do usuário"
+                        aria-expanded="false"
+                    >
+                        MI
+                    </button>
+
+                    <div id="menu-usuario" class="usuario-menu">
+
+                        <div class="usuario-identificacao">
+
+                            <div class="usuario-avatar-grande">
+                                MI
+                            </div>
+
+                            <div class="usuario-dados">
+                                <strong id="usuario-nome">Seu nome</strong>
+                                <small id="usuario-email">seu@email.com</small>
+                            </div>
+
+                        </div>
+
+                        <div class="usuario-separador"></div>
+
+                        <button type="button" id="mostrar-overview">
+                            Mostrar overview
+                        </button>
+
+                        <div id="overview-usuario" class="overview">
+
+                            <h3>Visão geral dos chamados</h3>
+
+                            <div class="overview-grade">
+
+                                <div class="overview-item">
+                                    <strong id="overview-total">0</strong>
+                                    <span>Total de chamados</span>
+                                </div>
+
+                                <div class="overview-item">
+                                    <strong id="overview-abertos">0</strong>
+                                    <span>Abertos</span>
+                                </div>
+
+                                <div class="overview-item">
+                                    <strong id="overview-atendimento">0</strong>
+                                    <span>Em atendimento</span>
+                                </div>
+
+                                <div class="overview-item">
+                                    <strong id="overview-resolvidos">0</strong>
+                                    <span>Resolvidos</span>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="usuario-separador"></div>
+
+                        <button type="button" id="acao-sair">
+                            Sair da conta
+                        </button>
+
+                    </div>
+                </div>
+
+            </div>
+        </header>
+
+        <main>
+
+            <!-- AÇÃO PRINCIPAL -->
+            <section>
+                <button type="button" id="abrir-modal">
+                    + Abrir chamado
+                </button>
+            </section>
+
+            <!-- INDICADORES -->
+            <section class="indicadores">
+
+                <div class="indicador">
+                    <h3>Total de chamados</h3>
+                    <strong id="total">0</strong>
+                </div>
+
+                <div class="indicador">
+                    <h3>Abertos</h3>
+                    <strong id="abertos">0</strong>
+                </div>
+
+                <div class="indicador">
+                    <h3>Em atendimento</h3>
+                    <strong id="em-atendimento">0</strong>
+                </div>
+
+                <div class="indicador">
+                    <h3>Resolvidos</h3>
+                    <strong id="resolvidos">0</strong>
+                </div>
+
+            </section>
+
+            <!-- PESQUISA E FILTROS -->
+            <section class="area-filtros">
+
+                <input
+                    type="search"
+                    id="pesquisa"
+                    placeholder="Pesquisar chamados pelo assunto ou descrição..."
                 >
-                    MI
+
+                <div class="filtros">
+
+                    <div>
+                        <label for="filtro-data">Data de abertura</label>
+                        <input type="date" id="filtro-data">
+                    </div>
+
+                    <div>
+                        <label for="filtro-urgencia">Urgência</label>
+                        <select id="filtro-urgencia">
+                            <option value="">Todas</option>
+                            <option value="baixa">Baixa</option>
+                            <option value="media">Média</option>
+                            <option value="alta">Alta</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="filtro-status">Status</label>
+                        <select id="filtro-status">
+                            <option value="">Todos</option>
+                            <option value="aberto">Aberto</option>
+                            <option value="em_atendimento">Em atendimento</option>
+                            <option value="resolvido">Resolvido</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <button type="button" id="limpar-filtros">
+                    Limpar filtros
                 </button>
 
-                <div id="menu-usuario" class="usuario-menu">
+            </section>
 
-                    <div class="usuario-identificacao">
-                        <div class="usuario-avatar-grande">MI</div>
+            <!-- LISTA DE CHAMADOS -->
+            <section>
 
-                        <div class="usuario-dados">
-                            <strong id="usuario-nome">Seu nome</strong>
-                            <small id="usuario-email">seu@email.com</small>
-                        </div>
-                    </div>
+                <p id="contador-lista"></p>
 
-                    <div class="usuario-separador"></div>
+                <p id="comece-por" hidden>
+                    Nenhum chamado encontrado. Abra um chamado ou altere os filtros.
+                </p>
 
-                    <button type="button" id="mostrar-overview">
-                        Mostrar overview
-                    </button>
+                <div id="lista"></div>
 
-                    <div id="overview-usuario" class="overview">
-                        <h3>Visão geral das tarefas</h3>
+            </section>
 
-                        <div class="overview-grade">
-                            <div class="overview-item">
-                                <strong id="overview-total">0</strong>
-                                <span>Total de tarefas</span>
-                            </div>
+        </main>
 
-                            <div class="overview-item">
-                                <strong id="overview-concluidas">0</strong>
-                                <span>Concluídas</span>
-                            </div>
+        <!-- MODAL DE CADASTRO E EDIÇÃO DE CHAMADOS -->
+        <dialog id="modal-chamado" class="modal">
 
-                            <div class="overview-item">
-                                <strong id="overview-andamento">0</strong>
-                                <span>Em andamento</span>
-                            </div>
-
-                            <div class="overview-item">
-                                <strong id="overview-bloqueadas">0</strong>
-                                <span>Bloqueadas</span>
-                            </div>
-
-                            <div class="overview-item">
-                                <strong id="overview-pendentes">0</strong>
-                                <span>Não iniciadas</span>
-                            </div>
-
-                            <div class="overview-item">
-                                <strong id="overview-percentual">0%</strong>
-                                <span>Conclusão</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="usuario-separador"></div>
-
-                    <button type="button" id="acao-sair">
-                        Sair da conta
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <main>
-
-        <section>
-            <button type="button" id="abrir-modal">
-                + Adicionar tarefa
-            </button>
-        </section>
-
-        <section class="indicadores">
-            <div class="indicador">
-                <h3>Total de tarefas</h3>
-                <strong id="total">0</strong>
-            </div>
-
-            <div class="indicador">
-                <h3>Não iniciadas</h3>
-                <strong id="pendentes">0</strong>
-            </div>
-
-            <div class="indicador">
-                <h3>Em andamento</h3>
-                <strong id="em-andamento">0</strong>
-            </div>
-
-            <div class="indicador">
-                <h3>Concluídas</h3>
-                <strong id="concluidas">0</strong>
-            </div>
-
-            <div class="indicador">
-                <h3>Bloqueadas</h3>
-                <strong id="bloqueadas">0</strong>
-            </div>
-        </section>
-
-        <section class="area-filtros">
-
-            <input
-                type="search"
-                id="pesquisa"
-                placeholder="Pesquisar tarefas pelo título ou descrição..."
+            <button
+                type="button"
+                id="fechar-modal"
+                aria-label="Fechar"
             >
+                &times;
+            </button>
 
-            <div class="filtros">
+            <h2 id="titulo-modal">Abrir chamado</h2>
+
+            <p id="descricao-modal">
+                Preencha os dados da solicitação de suporte.
+            </p>
+
+            <form id="formulario">
 
                 <div>
-                    <label for="filtro-data">Data de criação</label>
-                    <input type="date" id="filtro-data">
+                    <label for="assunto">Assunto</label>
+
+                    <input
+                        type="text"
+                        id="assunto"
+                        required
+                        minlength="3"
+                        placeholder="Ex.: Erro ao acessar o sistema"
+                    >
                 </div>
 
                 <div>
-                    <label for="filtro-prazo">Situação do prazo</label>
-                    <select id="filtro-prazo">
-                        <option value="">Todos os prazos</option>
-                        <option value="no_prazo">No prazo</option>
-                        <option value="em_atraso">Em atraso</option>
-                    </select>
+                    <label for="descricao">Descrição</label>
+
+                    <textarea
+                        id="descricao"
+                        placeholder="Descreva o problema ou a solicitação..."
+                    ></textarea>
                 </div>
 
                 <div>
-                    <label for="filtro-prioridade">Prioridade</label>
-                    <select id="filtro-prioridade">
-                        <option value="">Todas</option>
+                    <label for="urgencia">Urgência</label>
+
+                    <select id="urgencia" required>
                         <option value="baixa">Baixa</option>
-                        <option value="media">Média</option>
+                        <option value="media" selected>Média</option>
                         <option value="alta">Alta</option>
                     </select>
                 </div>
 
                 <div>
-                    <label for="filtro-status">Status</label>
-                    <select id="filtro-status">
-                        <option value="">Todos</option>
-                        <option value="nao_iniciada">Não iniciada</option>
-                        <option value="em_andamento">Em andamento</option>
-                        <option value="concluida">Concluída</option>
-                        <option value="bloqueada">Bloqueada</option>
+                    <label for="status">Status</label>
+
+                    <select id="status" required>
+                        <option value="aberto">Aberto</option>
+                        <option value="em_atendimento">Em atendimento</option>
+                        <option value="resolvido">Resolvido</option>
                     </select>
                 </div>
 
-            </div>
+                <div>
+                    <label for="tags">Categorias</label>
 
-            <button type="button" id="limpar-filtros">
-                Limpar filtros
-            </button>
+                    <input
+                        type="text"
+                        id="tags"
+                        placeholder="Ex.: rede, acesso, sistema"
+                    >
 
-        </section>
+                    <small>
+                        Separe as categorias por vírgula.
+                    </small>
+                </div>
 
-        <section>
-            <p id="contador-lista"></p>
+                <p id="erro" role="alert"></p>
 
-            <p id="comece-por" hidden>
-                Nenhuma tarefa encontrada. Adicione uma tarefa ou altere os filtros.
-            </p>
+                <button type="submit" id="salvar-chamado">
+                    Salvar chamado
+                </button>
 
-            <div id="lista"></div>
-        </section>
+                <button type="button" id="cancelar-modal">
+                    Cancelar
+                </button>
 
-    </main>
+            </form>
 
-    <dialog id="modal-tarefa" class="modal">
+        </dialog>
 
-        <button type="button" id="fechar-modal" aria-label="Fechar">
-            &times;
-        </button>
+        <footer>
+            <p>TaskFlow — Gerenciamento de chamados de suporte.</p>
+        </footer>
 
-        <h2 id="titulo-modal">Adicionar tarefa</h2>
-        <p id="descricao-modal">Preencha os dados da tarefa.</p>
-
-        <form id="formulario">
-
-            <div>
-                <label for="titulo">Título</label>
-                <input
-                    type="text"
-                    id="titulo"
-                    required
-                    minlength="3"
-                    placeholder="Nome da tarefa"
-                >
-            </div>
-
-            <div>
-                <label for="descricao">Descrição</label>
-                <textarea
-                    id="descricao"
-                    placeholder="Descreva sua tarefa..."
-                ></textarea>
-            </div>
-
-            <div>
-                <label for="prioridade">Prioridade</label>
-                <select id="prioridade" required>
-                    <option value="baixa">Baixa</option>
-                    <option value="media" selected>Média</option>
-                    <option value="alta">Alta</option>
-                </select>
-            </div>
-
-            <div>
-                <label for="status">Status</label>
-                <select id="status" required>
-                    <option value="nao_iniciada">Não iniciada</option>
-                    <option value="em_andamento">Em andamento</option>
-                    <option value="concluida">Concluída</option>
-                    <option value="bloqueada">Bloqueada</option>
-                </select>
-            </div>
-
-            <div>
-                <label for="prazo">Prazo de entrega</label>
-                <input type="date" id="prazo">
-            </div>
-
-            <p id="erro" role="alert"></p>
-
-            <button type="submit" id="salvar-tarefa">
-                Salvar tarefa
-            </button>
-
-            <button type="button" id="cancelar-modal">
-                Cancelar
-            </button>
-
-        </form>
-
-    </dialog>
-
-    <footer>
-        <p>TaskFlow — Organização e produtividade.</p>
-    </footer>
     </div>
 
     <script type="module" src="./src/main.ts"></script>
 
 </body>
 </html>
-
-
-
-

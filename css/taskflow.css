@@ -1,5 +1,6 @@
+
 /* ========================================
-   TASKFLOW - ESTILIZAÇÃO GERAL
+   TASKFLOW - ESTILO GERAL
 ======================================== */
 
 * {
@@ -12,6 +13,11 @@
     font-family: Arial, Helvetica, sans-serif;
     color: #263247;
     background: #f4f6fa;
+    font-synthesis: none;
+}
+
+[hidden] {
+    display: none !important;
 }
 
 body {
@@ -28,6 +34,7 @@ textarea {
 
 button {
     cursor: pointer;
+    transition: background .2s, border-color .2s, color .2s, transform .2s;
 }
 
 /* ========================================
@@ -35,27 +42,42 @@ button {
 ======================================== */
 
 header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
     background: #2563eb;
-    color: #ffffff;
-    padding: 28px 5%;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.10);
+    color: #fff;
+    padding: 22px max(5%, calc((100% - 1200px) / 2));
+    box-shadow: 0 3px 12px rgba(0, 0, 0, .10);
 }
 
 header h1,
 #nome-do-sistema {
-    font-size: 28px;
+    font-size: 27px;
     font-weight: 700;
+    letter-spacing: -.6px;
 }
 
 header p {
-    margin-top: 7px;
+    margin-top: 6px;
     color: #e5edff;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 #versao,
 #data-de-hoje {
-    font-size: 13px;
+    font-size: 12px;
+}
+
+#botao-usuario {
+    width: 42px;
+    height: 42px;
+    border: 0;
+    border-radius: 50%;
+    background: #fff;
+    color: #2563eb;
+    font-weight: 700;
 }
 
 /* ========================================
@@ -72,21 +94,23 @@ section {
 }
 
 /* ========================================
-   BOTÃO ADICIONAR
+   BOTÕES PRINCIPAIS
 ======================================== */
 
-#abrir-modal {
-    background: #2563eb;
-    color: #ffffff;
-    border: none;
+#abrir-modal,
+#salvar-chamado {
+    border: 0;
     border-radius: 9px;
-    padding: 12px 20px;
-    font-weight: 600;
-    transition: background 0.2s;
+    padding: 12px 19px;
+    background: #2563eb;
+    color: #fff;
+    font-weight: 700;
 }
 
-#abrir-modal:hover {
+#abrir-modal:hover,
+#salvar-chamado:hover {
     background: #1d4ed8;
+    transform: translateY(-1px);
 }
 
 /* ========================================
@@ -97,75 +121,78 @@ section {
 .estatisticas,
 .resumo {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
 }
 
 .indicador,
 .estatistica,
 .resumo__item {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 19px;
-    box-shadow: 0 2px 9px rgba(30, 50, 90, 0.06);
+    min-width: 0;
+    padding: 20px;
+    border: 1px solid #edf0f5;
+    border-radius: 13px;
+    background: #fff;
+    box-shadow: 0 3px 12px rgba(30, 50, 90, .05);
 }
 
 .indicador h3,
 .estatistica h3,
 .resumo__item h3 {
-    font-size: 13px;
-    color: #64748b;
-    font-weight: 500;
     margin-bottom: 9px;
+    color: #64748b;
+    font-size: 13px;
+    font-weight: 500;
 }
 
 .indicador strong,
 .estatistica strong,
 .resumo__item strong {
+    color: #1e293b;
     font-size: 27px;
-    color: #263247;
 }
 
 /* ========================================
-   ÁREA DE PESQUISA E FILTROS
+   PESQUISA
 ======================================== */
 
 #pesquisa {
     width: 100%;
-    height: 48px;
-    padding: 0 16px;
+    height: 46px;
+    padding: 0 14px;
     border: 1px solid #d8dfeb;
     border-radius: 9px;
-    background: #ffffff;
-    color: #263247;
     outline: none;
-    transition: border 0.2s, box-shadow 0.2s;
+    background: #fff;
+    color: #263247;
+    font-size: 14px;
+    transition: border .2s, box-shadow .2s;
 }
 
 #pesquisa:focus {
     border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
 }
 
 #pesquisa::placeholder {
     color: #94a3b8;
 }
 
-/* Agrupamento dos filtros */
+/* ========================================
+   FILTROS
+======================================== */
 
 .filtros {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 12px;
-    margin-top: 13px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
     align-items: end;
+    margin-top: 13px;
 }
 
 .filtros > div {
     min-width: 0;
 }
-
-/* Identificação de cada filtro */
 
 .filtros label {
     display: block;
@@ -175,170 +202,155 @@ section {
     font-weight: 600;
 }
 
-/* Campos dos filtros */
-
 #filtro-data,
-#filtro-prazo,
-#filtro-prioridade,
+#filtro-urgencia,
 #filtro-status {
     width: 100%;
-    height: 43px;
-    padding: 0 10px;
+    height: 42px;
+    padding: 0 11px;
     border: 1px solid #d8dfeb;
     border-radius: 8px;
-    background: #ffffff;
+    outline: none;
+    background: #fff;
     color: #334155;
     font-size: 13px;
-    outline: none;
-    transition: border 0.2s, box-shadow 0.2s;
 }
 
 #filtro-data:focus,
-#filtro-prazo:focus,
-#filtro-prioridade:focus,
+#filtro-urgencia:focus,
 #filtro-status:focus {
     border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
 }
 
-/* Botão limpar filtros */
-
 #limpar-filtros {
-    margin-top: 12px;
-    padding: 9px 15px;
+    margin-top: 11px;
+    padding: 9px 14px;
     border: 1px solid #cbd5e1;
     border-radius: 8px;
-    background: #ffffff;
+    background: #fff;
     color: #475569;
     font-size: 13px;
-    transition: 0.2s;
 }
 
 #limpar-filtros:hover {
-    background: #eef2ff;
     border-color: #2563eb;
+    background: #eff6ff;
     color: #2563eb;
 }
 
 /* ========================================
-   LISTA DE TAREFAS
+   LISTA DE CHAMADOS
 ======================================== */
 
 #contador-lista {
-    color: #64748b;
-    font-size: 14px;
     margin-bottom: 14px;
+    color: #64748b;
+    font-size: 13px;
 }
 
 #comece-por {
+    padding: 35px 15px;
+    border-radius: 12px;
+    background: #fff;
     color: #64748b;
     text-align: center;
-    padding: 35px 15px;
-    background: #ffffff;
-    border-radius: 12px;
 }
 
 #lista {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 13px;
 }
 
 /* ========================================
-   CARTÕES DE TAREFA
+   CARTÕES DE CHAMADOS
 ======================================== */
 
-.tarefa {
+.tarefa,
+.chamado {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 20px;
-    background: #ffffff;
+    gap: 18px;
+    padding: 18px 20px;
     border: 1px solid #e5eaf2;
-    border-left: 5px solid #94a3b8;
+    border-left: 4px solid #94a3b8;
     border-radius: 11px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(30, 50, 90, 0.05);
-    transition: transform 0.2s, box-shadow 0.2s;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(30, 50, 90, .04);
+    transition: transform .2s, box-shadow .2s;
 }
 
-.tarefa:hover {
+.tarefa:hover,
+.chamado:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 14px rgba(30, 50, 90, 0.09);
+    box-shadow: 0 5px 14px rgba(30, 50, 90, .08);
 }
 
-.tarefa--alta {
+.tarefa--alta,
+.chamado--alta {
     border-left-color: #ef4444;
 }
 
-.tarefa--media {
+.tarefa--media,
+.chamado--media {
     border-left-color: #f59e0b;
 }
 
-.tarefa--baixa {
+.tarefa--baixa,
+.chamado--baixa {
     border-left-color: #22c55e;
 }
 
-.tarefa__principal {
+.tarefa__principal,
+.chamado__principal {
     flex: 1;
     min-width: 0;
 }
 
-.tarefa__principal h3 {
+.tarefa__principal h3,
+.chamado__principal h3,
+.tarefa h3,
+.chamado h3 {
+    margin-bottom: 5px;
+    color: #1e293b;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.tarefa__principal p,
+.chamado__principal p,
+.tarefa p,
+.chamado p {
     margin-bottom: 8px;
-    font-size: 17px;
-    color: #263247;
-}
-
-.tarefa__principal p {
     color: #64748b;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.5;
-    margin-bottom: 12px;
 }
 
-.tarefa__meta {
+.tarefa__meta,
+.chamado__meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 10px;
+    gap: 7px;
+    margin-top: 9px;
 }
+
+/* ========================================
+   ETIQUETAS
+======================================== */
 
 .etiqueta {
     display: inline-flex;
     align-items: center;
-    padding: 5px 9px;
+    padding: 5px 8px;
     border-radius: 6px;
     background: #eef2ff;
     color: #475569;
     font-size: 11px;
     font-weight: 600;
 }
-
-.tarefa__acoes {
-    display: flex;
-    gap: 8px;
-    flex-shrink: 0;
-}
-
-.tarefa__acoes button {
-    border: 1px solid #d8dfeb;
-    border-radius: 7px;
-    padding: 8px 12px;
-    background: #ffffff;
-    color: #475569;
-    font-size: 12px;
-}
-
-.tarefa__acoes button:hover {
-    background: #eff6ff;
-    border-color: #2563eb;
-    color: #2563eb;
-}
-
-/* ========================================
-   STATUS DAS TAREFAS
-======================================== */
 
 .status--nao_iniciada {
     background: #f1f5f9;
@@ -360,6 +372,64 @@ section {
     color: #b91c1c;
 }
 
+/* Status dos chamados */
+
+.status--aberto {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.status--em_atendimento {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status--resolvido {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+/* ========================================
+   AÇÕES DOS CHAMADOS
+======================================== */
+
+.tarefa__acoes,
+.chamado__acoes {
+    display: flex;
+    flex-shrink: 0;
+    gap: 7px;
+}
+
+.tarefa__acoes button,
+.chamado__acoes button,
+#lista button {
+    padding: 7px 11px;
+    border: 1px solid #d8dfeb;
+    border-radius: 7px;
+    background: #fff;
+    color: #475569;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.tarefa__acoes button:hover,
+.chamado__acoes button:hover,
+#lista button:hover {
+    border-color: #2563eb;
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+#lista button:last-child {
+    color: #dc2626;
+}
+
+#lista button:last-child:hover {
+    border-color: #fecaca;
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
 /* ========================================
    MODAL
 ======================================== */
@@ -369,46 +439,51 @@ section {
     max-height: 90vh;
     margin: auto;
     padding: 26px;
-    border: none;
-    border-radius: 14px;
-    background: #ffffff;
-    color: #263247;
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.20);
     overflow-y: auto;
+    border: none;
+    border-radius: 15px;
+    background: #fff;
+    color: #263247;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, .20);
 }
 
 .modal::backdrop {
-    background: rgba(15, 23, 42, 0.55);
-    backdrop-filter: blur(2px);
+    background: rgba(15, 23, 42, .55);
+    backdrop-filter: blur(3px);
 }
 
 .modal h2 {
-    font-size: 22px;
     margin-bottom: 8px;
+    color: #1e293b;
+    font-size: 22px;
 }
 
 .modal p {
+    margin-bottom: 20px;
     color: #64748b;
     font-size: 14px;
-    margin-bottom: 20px;
 }
 
 #fechar-modal {
     float: right;
-    border: none;
+    border: 0;
     background: transparent;
     color: #64748b;
     font-size: 22px;
 }
 
+#fechar-modal:hover {
+    color: #1e293b;
+}
+
 /* ========================================
-   FORMULÁRIO DO MODAL
+   FORMULÁRIO DO CHAMADO
 ======================================== */
 
 #formulario {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 14px;
 }
 
 #formulario label {
@@ -419,34 +494,36 @@ section {
     font-weight: 600;
 }
 
-.campo__entrada,
-.campo__selecao,
-.campo__textarea,
 #formulario input,
 #formulario select,
-#formulario textarea {
+#formulario textarea,
+.campo__entrada,
+.campo__selecao,
+.campo__textarea {
     width: 100%;
-    padding: 11px 12px;
+    min-height: 42px;
+    padding: 10px 12px;
     border: 1px solid #d8dfeb;
     border-radius: 8px;
-    background: #ffffff;
-    color: #263247;
     outline: none;
+    background: #fff;
+    color: #263247;
+    font-size: 14px;
 }
 
-.campo__entrada:focus,
-.campo__selecao:focus,
-.campo__textarea:focus,
 #formulario input:focus,
 #formulario select:focus,
-#formulario textarea:focus {
+#formulario textarea:focus,
+.campo__entrada:focus,
+.campo__selecao:focus,
+.campo__textarea:focus {
     border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
 }
 
-.campo__textarea,
-#formulario textarea {
-    min-height: 90px;
+#formulario textarea,
+.campo__textarea {
+    min-height: 100px;
     resize: vertical;
 }
 
@@ -455,25 +532,18 @@ section {
     font-size: 13px;
 }
 
-#formulario button {
-    border: none;
-    border-radius: 8px;
-    padding: 11px 16px;
-    font-weight: 600;
-}
-
-#salvar-tarefa {
-    background: #2563eb;
-    color: #ffffff;
-}
-
-#salvar-tarefa:hover {
-    background: #1d4ed8;
+#salvar-chamado {
+    min-height: 43px;
 }
 
 #cancelar-modal {
+    min-height: 43px;
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 8px;
     background: #e2e8f0;
     color: #334155;
+    font-weight: 600;
 }
 
 #cancelar-modal:hover {
@@ -481,90 +551,64 @@ section {
 }
 
 /* ========================================
-   RODAPÉ
+   MENU DO USUÁRIO
 ======================================== */
 
-footer {
-    padding: 20px;
-    text-align: center;
-    color: #94a3b8;
+#menu-usuario {
+    padding: 15px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 5px 18px rgba(15, 23, 42, .12);
+}
+
+#menu-usuario button {
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 7px;
+    background: #fee2e2;
+    color: #b91c1c;
+    font-weight: 600;
+}
+
+#menu-usuario button:hover {
+    background: #fecaca;
+}
+
+#usuario-nome {
+    color: #1e293b;
+    font-weight: 700;
+}
+
+#usuario-email {
+    color: #64748b;
     font-size: 12px;
 }
 
 /* ========================================
-   RESPONSIVIDADE
+   RODAPÉ
 ======================================== */
 
-@media (max-width: 850px) {
-    .indicadores,
-    .estatisticas,
-    .resumo {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .filtros {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 600px) {
-    header {
-        padding: 22px 5%;
-    }
-
-    header h1,
-    #nome-do-sistema {
-        font-size: 23px;
-    }
-
-    main {
-        width: 92%;
-        margin-top: 20px;
-    }
-
-    .indicadores,
-    .estatisticas,
-    .resumo {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .filtros {
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-    }
-
-    .tarefa {
-        flex-direction: column;
-    }
-
-    .tarefa__acoes {
-        width: 100%;
-    }
-
-    .tarefa__acoes button {
-        flex: 1;
-    }
-
-    .modal {
-        padding: 20px;
-    }
+footer {
+    padding: 22px;
+    color: #94a3b8;
+    font-size: 12px;
+    text-align: center;
 }
 
 /* ========================================
    TELA INICIAL E AUTENTICAÇÃO
 ======================================== */
 
-[hidden] {
-    display: none !important;
-}
-
 .tela-inicial {
-    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 100vh;
     padding: 48px 20px;
-    background: radial-gradient(circle at top left, #e7efff 0, transparent 38%), #f4f6fa;
+    background:
+        radial-gradient(circle at top left, #e7efff 0, transparent 38%),
+        #f4f6fa;
 }
 
 .inicio-container {
@@ -698,7 +742,6 @@ footer {
     background: #2563eb;
     color: #fff;
     font-weight: 700;
-    transition: background .2s;
 }
 
 .botao-autenticacao:hover {
@@ -721,7 +764,81 @@ footer {
     text-align: center;
 }
 
+/* ========================================
+   RESPONSIVIDADE
+======================================== */
+
+@media (max-width: 850px) {
+    .indicadores,
+    .estatisticas,
+    .resumo {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .filtros {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
 @media (max-width: 600px) {
+    header {
+        padding: 20px 4%;
+    }
+
+    header h1,
+    #nome-do-sistema {
+        font-size: 23px;
+    }
+
+    main {
+        width: 92%;
+        margin-top: 22px;
+    }
+
+    .indicadores,
+    .estatisticas,
+    .resumo {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .indicador,
+    .estatistica,
+    .resumo__item {
+        padding: 15px;
+    }
+
+    .indicador strong,
+    .estatistica strong,
+    .resumo__item strong {
+        font-size: 23px;
+    }
+
+    .filtros {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .tarefa,
+    .chamado {
+        flex-direction: column;
+        padding: 16px;
+    }
+
+    .tarefa__acoes,
+    .chamado__acoes {
+        width: 100%;
+    }
+
+    .tarefa__acoes button,
+    .chamado__acoes button {
+        flex: 1;
+    }
+
+    .modal {
+        padding: 20px;
+    }
+
     .tela-inicial {
         padding: 35px 16px;
     }
