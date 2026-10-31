@@ -498,6 +498,52 @@ formulario.addEventListener("submit", (evento) => {
     }
 });
 
+
+// ========================================
+// TELA INICIAL - LOGIN E CADASTRO
+// ========================================
+
+const abaLogin = elemento("aba-login");
+const abaCadastro = elemento("aba-cadastro");
+const formularioLogin = elemento("form-login") as HTMLFormElement;
+const formularioCadastro = elemento("form-cadastro") as HTMLFormElement;
+
+function mostrarFormularioAcesso(tipo: "login" | "cadastro"): void {
+    const loginAtivo = tipo === "login";
+    formularioLogin.hidden = !loginAtivo;
+    formularioCadastro.hidden = loginAtivo;
+    abaLogin.classList.toggle("ativa", loginAtivo);
+    abaCadastro.classList.toggle("ativa", !loginAtivo);
+    abaLogin.setAttribute("aria-selected", String(loginAtivo));
+    abaCadastro.setAttribute("aria-selected", String(!loginAtivo));
+    elemento("erro-login").textContent = "";
+    elemento("erro-cadastro").textContent = "";
+}
+
+abaLogin.addEventListener("click", () => mostrarFormularioAcesso("login"));
+abaCadastro.addEventListener("click", () => mostrarFormularioAcesso("cadastro"));
+
+formularioLogin.addEventListener("submit", (evento) => {
+    evento.preventDefault();
+    elemento("erro-login").textContent =
+        "O login ainda não está conectado ao servidor. Sua senha não foi enviada nem armazenada.";
+});
+
+formularioCadastro.addEventListener("submit", (evento) => {
+    evento.preventDefault();
+    const senha = campo("cadastro-senha").value;
+    const confirmacao = campo("cadastro-confirmacao").value;
+
+    if (senha !== confirmacao) {
+        elemento("erro-cadastro").textContent = "As senhas não coincidem.";
+        campo("cadastro-confirmacao").focus();
+        return;
+    }
+
+    elemento("erro-cadastro").textContent =
+        "O cadastro ainda não está conectado ao servidor. Nenhuma senha foi armazenada.";
+});
+
 // ========================================
 // INICIALIZAÇÃO
 // ========================================

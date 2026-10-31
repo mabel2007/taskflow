@@ -1,4 +1,3 @@
-
 /* ========================================
    TASKFLOW - ESTILIZAÇÃO GERAL
 ======================================== */
@@ -176,7 +175,7 @@ section {
     font-weight: 600;
 }
 
-/* Quadradinhos dos filtros */
+/* Campos dos filtros */
 
 #filtro-data,
 #filtro-prazo,
@@ -551,4 +550,198 @@ footer {
     }
 }
 
+/* ========================================
+   TELA INICIAL E AUTENTICAÇÃO
+======================================== */
 
+[hidden] {
+    display: none !important;
+}
+
+.tela-inicial {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 20px;
+    background: radial-gradient(circle at top left, #e7efff 0, transparent 38%), #f4f6fa;
+}
+
+.inicio-container {
+    width: min(100%, 520px);
+    text-align: center;
+}
+
+.marca-taskflow {
+    display: inline-flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 30px;
+    color: #1e3a8a;
+    font-size: 34px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+}
+
+.marca-taskflow > span:last-child span {
+    color: #2563eb;
+}
+
+.marca-icone {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 15px;
+    background: #2563eb;
+    color: #fff;
+    font-size: 32px;
+    box-shadow: 0 8px 18px rgba(37, 99, 235, .22);
+}
+
+.tela-inicial h1 {
+    color: #1e293b;
+    font-size: clamp(30px, 5vw, 42px);
+    line-height: 1.16;
+    letter-spacing: -1.4px;
+}
+
+.tela-inicial h1 span {
+    color: #2563eb;
+}
+
+.inicio-subtitulo {
+    margin: 13px 0 30px;
+    color: #64748b;
+    font-size: 17px;
+}
+
+.cartao-autenticacao {
+    padding: 27px;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    background: #fff;
+    text-align: left;
+    box-shadow: 0 14px 40px rgba(30, 50, 90, .09);
+}
+
+.abas-autenticacao {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+    padding: 5px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    background: #f1f5f9;
+}
+
+.aba-autenticacao {
+    padding: 11px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: #64748b;
+    font-weight: 700;
+}
+
+.aba-autenticacao.ativa {
+    background: #fff;
+    color: #2563eb;
+    box-shadow: 0 1px 5px rgba(15, 23, 42, .10);
+}
+
+.form-autenticacao {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-autenticacao h2 {
+    margin-bottom: 0;
+    color: #1e293b;
+    font-size: 22px;
+}
+
+.form-autenticacao > p:not(.mensagem-autenticacao) {
+    margin: 0 0 9px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.form-autenticacao label {
+    margin-top: 5px;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.form-autenticacao input {
+    width: 100%;
+    min-height: 45px;
+    padding: 11px 12px;
+    border: 1px solid #d8dfeb;
+    border-radius: 8px;
+    outline: none;
+}
+
+.form-autenticacao input:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .11);
+}
+
+.botao-autenticacao {
+    min-height: 47px;
+    margin-top: 9px;
+    border: 0;
+    border-radius: 9px;
+    background: #2563eb;
+    color: #fff;
+    font-weight: 700;
+    transition: background .2s;
+}
+
+.botao-autenticacao:hover {
+    background: #1d4ed8;
+}
+
+.mensagem-autenticacao {
+    min-height: 0;
+    margin: 2px 0 0;
+    color: #b91c1c;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.aviso-autenticacao {
+    margin: 18px 0 0;
+    color: #94a3b8;
+    font-size: 11px;
+    line-height: 1.5;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    .tela-inicial {
+        padding: 35px 16px;
+    }
+
+    .marca-taskflow {
+        margin-bottom: 23px;
+        font-size: 30px;
+    }
+
+    .marca-icone {
+        width: 46px;
+        height: 46px;
+        font-size: 28px;
+    }
+
+    .inicio-subtitulo {
+        font-size: 15px;
+    }
+
+    .cartao-autenticacao {
+        padding: 21px;
+    }
+}
