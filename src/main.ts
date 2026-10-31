@@ -42,7 +42,6 @@ const botaoOverview = elemento("mostrar-overview");
 const overview = elemento("overview-usuario");
 
 let chamadoEmEdicao: number | null = null;
-let usuarioAtual: Usuario | null = null;
 
 const nomesStatus: Record<StatusChamado, string> = {
     aberto: "Aberto",
@@ -59,16 +58,6 @@ const nomesUrgencia: Record<Urgencia, string> = {
 // ========================================
 // DATAS
 // ========================================
-
-function dataAtual(): string {
-    const hoje = new Date();
-
-    const ano = hoje.getFullYear();
-    const mes = String(hoje.getMonth() + 1).padStart(2, "0");
-    const dia = String(hoje.getDate()).padStart(2, "0");
-
-    return `${ano}-${mes}-${dia}`;
-}
 
 function formatarData(data: string | Date): string {
     const valor = data instanceof Date ? data : new Date(data);
@@ -127,8 +116,6 @@ abaCadastro.addEventListener("click", () => {
 // ========================================
 
 function mostrarPainel(usuario: Usuario): void {
-    usuarioAtual = usuario;
-
     telaInicial.hidden = true;
     painelApp.hidden = false;
 
@@ -143,14 +130,12 @@ function mostrarPainel(usuario: Usuario): void {
         .join("");
 
     botaoUsuario.textContent = iniciais;
-    elemento("usuario-nome").textContent = usuario.nome;
+    elemento("usuario-iniciais").textContent = iniciais;
 
     desenhar();
 }
 
 function mostrarTelaInicial(): void {
-    usuarioAtual = null;
-
     painelApp.hidden = true;
     telaInicial.hidden = false;
 
@@ -280,7 +265,6 @@ botaoOverview.addEventListener("click", alternarOverview);
 elemento("acao-sair").addEventListener("click", async () => {
     try {
         await sairDaConta();
-
         mostrarTelaInicial();
 
     } catch (erro) {
@@ -293,11 +277,23 @@ elemento("acao-sair").addEventListener("click", async () => {
 });
 
 // ========================================
-// OVERVIEW
+// OVERVIEW DO PERFIL
 // ========================================
 
 function atualizarOverview(): void {
     const total = lista.length;
+
+    const urgenciaAlta = lista.filter(
+        (chamado) => chamado.urgencia === "alta"
+    ).length;
+
+    const urgenciaMedia = lista.filter(
+        (chamado) => chamado.urgencia === "media"
+    ).length;
+
+    const urgenciaBaixa = lista.filter(
+        (chamado) => chamado.urgencia === "baixa"
+    ).length;
 
     const abertos = lista.filter(
         (chamado) => chamado.status === "aberto"
@@ -311,10 +307,24 @@ function atualizarOverview(): void {
         (chamado) => chamado.status === "resolvido"
     ).length;
 
-    elemento("overview-total").textContent = String(total);
+    const percentual = total > 0
+        ? Math.round((resolvidos / total) * 100)
+        : 0;
+
+    elemento("overview-urgencia-alta").textContent = String(urgenciaAlta);
+    elemento("overview-urgencia-media").textContent = String(urgenciaMedia);
+    elemento("overview-urgencia-baixa").textContent = String(urgenciaBaixa);
+
     elemento("overview-abertos").textContent = String(abertos);
     elemento("overview-atendimento").textContent = String(atendimento);
     elemento("overview-resolvidos").textContent = String(resolvidos);
+
+    elemento("overview-percentual").textContent = `${percentual}%`;
+    elemento("overview-total").textContent =
+        `${total} chamado(s) no total`;
+
+    const progresso = elemento("overview-progresso") as HTMLElement;
+    progresso.style.width = `${percentual}%`;
 }
 
 // ========================================
@@ -368,7 +378,6 @@ function abrirEdicao(chamado: Chamado): void {
 
 function criarItem(chamado: Chamado): HTMLElement {
     const cartao = document.createElement("article");
-
     cartao.className = `chamado chamado--${chamado.urgencia}`;
 
     const principal = document.createElement("div");
@@ -376,13 +385,11 @@ function criarItem(chamado: Chamado): HTMLElement {
 
     const titulo = document.createElement("h3");
     titulo.textContent = chamado.assunto;
-
     principal.appendChild(titulo);
 
     if (chamado.descricao) {
         const descricao = document.createElement("p");
         descricao.textContent = chamado.descricao;
-
         principal.appendChild(descricao);
     }
 
@@ -390,7 +397,7 @@ function criarItem(chamado: Chamado): HTMLElement {
     metadados.className = "chamado__meta";
 
     const urgencia = document.createElement("span");
-    urgencia.className = "etiqueta";
+    urgencia.className = `etiqueta urgencia--${chamado.urgencia}`;
     urgencia.textContent =
         `Urgência: ${nomesUrgencia[chamado.urgencia]}`;
 
@@ -409,7 +416,6 @@ function criarItem(chamado: Chamado): HTMLElement {
         const etiqueta = document.createElement("span");
         etiqueta.className = "etiqueta";
         etiqueta.textContent = `#${tag}`;
-
         metadados.appendChild(etiqueta);
     }
 
@@ -421,10 +427,7 @@ function criarItem(chamado: Chamado): HTMLElement {
     const editar = document.createElement("button");
     editar.type = "button";
     editar.textContent = "Editar";
-
-    editar.addEventListener("click", () => {
-        abrirEdicao(chamado);
-    });
+    editar.addEventListener("click", () => abrirEdicao(chamado));
 
     const excluir = document.createElement("button");
     excluir.type = "button";
@@ -448,7 +451,7 @@ function criarItem(chamado: Chamado): HTMLElement {
 }
 
 // ========================================
-// INDICADORES
+// INDICADORES DO PAINEL
 // ========================================
 
 function atualizarIndicadores(): void {
@@ -601,7 +604,6 @@ formulario.addEventListener("submit", (evento) => {
 
         modal.close();
         formulario.reset();
-
         chamadoEmEdicao = null;
 
         desenhar();
@@ -635,7 +637,6 @@ async function iniciarAplicacao(): Promise<void> {
 
     } catch (erro) {
         console.error("Erro ao consultar sessão:", erro);
-
         mostrarTelaInicial();
     }
 }
