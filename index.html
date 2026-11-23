@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f4f6fb">
+    <title>TaskFlow | Chamados de Suporte</title>
+    <link rel="stylesheet" href="./css/taskflow.css">
+</head>
+<body>
+    <!-- TELA DE ENTRADA -->
+    <section id="tela-entrada" class="tela-inicial">
+        <div class="inicio-container">
+            <div class="marca-taskflow" aria-label="TaskFlow">
+                <span class="marca-icone" aria-hidden="true">✓</span>
+                <span>Task<span>Flow</span></span>
+            </div>
+
+            <div class="inicio-apresentacao">
+                <span class="texto-destaque">ORGANIZAÇÃO E CONTROLE</span>
+                <h1>
+                    Gerencie seus chamados.<br>
+                    <span>Simplifique seu suporte.</span>
+                </h1>
+                <p class="inicio-subtitulo">
+                    Registre solicitações, acompanhe atendimentos e organize
+                    suas demandas em um só lugar.
+                </p>
+            </div>
+
+            <div class="cartao-autenticacao">
+                <div class="autenticacao-cabecalho">
+                    <h2>Acesse sua conta</h2>
+                    <p>Entre ou crie uma conta para continuar.</p>
+                </div>
+
+                <form id="form-entrar" class="form-autenticacao">
+                    <label for="entrar-email">E-mail</label>
+                    <input
+                        type="email"
+                        id="entrar-email"
+                        autocomplete="email"
+                        placeholder="voce@exemplo.com"
+                        required
+                    >
+
+                    <label for="entrar-senha">Senha</label>
+                    <input
+                        type="password"
+                        id="entrar-senha"
+                        autocomplete="current-password"
+                        placeholder="Sua senha"
+                        required
+                    >
+
+                    <p id="erro-entrada" class="mensagem-autenticacao"
+                       role="alert" aria-live="polite"></p>
+
+                    <button type="submit" class="botao-autenticacao">
+                        Entrar
+                    </button>
+                </form>
+
+                <form id="form-criar" class="form-autenticacao" hidden>
+                    <label for="criar-nome">Nome</label>
+                    <input
+                        type="text"
+                        id="criar-nome"
+                        autocomplete="name"
+                        placeholder="Seu nome"
+                        required
+                        minlength="2"
+                    >
+
+                    <label for="criar-email">E-mail</label>
+                    <input
+                        type="email"
+                        id="criar-email"
+                        autocomplete="email"
+                        placeholder="voce@exemplo.com"
+                        required
+                    >
+
+                    <label for="criar-senha">Senha</label>
+                    <input
+                        type="password"
+                        id="criar-senha"
+                        autocomplete="new-password"
+                        placeholder="Crie uma senha"
+                        required
+                        minlength="8"
+                    >
+
+                    <button type="submit" class="botao-autenticacao">
+                        Criar conta
+                    </button>
+                </form>
+
+                <div class="alternar-conta">
+                    <span id="texto-alternar">Ainda não tem uma conta?</span>
+                    <button type="button" id="alternar-entrada">
+                        Criar conta
+                    </button>
+                </div>
+
+                <p class="aviso-autenticacao">
+                    Seus dados de acesso são protegidos pelo sistema TaskFlow.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- APLICAÇÃO PRINCIPAL -->
+    <div id="tela-app" class="painel-app" hidden>
+        <header class="cabecalho">
+            <div class="cabecalho-conteudo">
+                <div class="cabecalho-marca">
+                    <div class="marca-taskflow marca-taskflow--pequena">
+                        <span class="marca-icone" aria-hidden="true">✓</span>
+                        <span id="nome-do-sistema">TaskFlow</span>
+                    </div>
+
+                    <p class="cabecalho-descricao">
+                        Sistema de gerenciamento de chamados de suporte.
+                    </p>
+
+                    <p class="cabecalho-informacoes">
+                        <span id="versao">v1.0.0</span>
+                        <span class="separador-ponto">•</span>
+                        <span id="data-de-hoje"></span>
+                    </p>
+                </div>
+
+                <div class="cabecalho-acoes">
+                    <button
+                        type="button"
+                        id="botao-tema"
+                        class="botao-icone"
+                        aria-label="Alternar tema claro e escuro"
+                        title="Alternar tema"
+                    >
+                        ☼
+                    </button>
+
+                    <div class="usuario-area">
+                        <div class="usuario-avatar" aria-hidden="true">
+                            <span>TF</span>
+                        </div>
+
+                        <div class="usuario-identificacao">
+                            <span class="usuario-legenda">Conectado como</span>
+                            <strong id="usuario-nome">Usuário</strong>
+                        </div>
+
+                        <button
+                            type="button"
+                            id="botao-sair"
+                            class="botao-sair"
+                        >
+                            Sair
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="conteudo-principal">
+            <section class="boas-vindas">
+                <div>
+                    <span class="texto-destaque">PAINEL DE CONTROLE</span>
+                    <h1>Central de chamados</h1>
+                    <p>
+                        Acompanhe, organize e gerencie suas solicitações de suporte.
+                    </p>
+                </div>
+            </section>
+
+            <p id="erro" class="mensagem-erro" role="alert" aria-live="polite"></p>
+
+            <div id="aviso-urgente" class="aviso-urgente aviso--oculto">
+                <span class="aviso-icone">!</span>
+                <div>
+                    <strong>Atenção: existem chamados de alta prioridade.</strong>
+                    <p>Verifique as solicitações que precisam de atenção.</p>
+                </div>
+            </div>
+
+            <!-- INDICADORES -->
+            <section class="indicadores" aria-label="Resumo dos chamados">
+                <article class="indicador indicador--total">
+                    <div class="indicador-topo">
+                        <span class="indicador-icone">▦</span>
+                        <span class="indicador-legenda">Visão geral</span>
+                    </div>
+                    <p>Total de chamados</p>
+                    <strong id="total">0</strong>
+                </article>
+
+                <article class="indicador indicador--pendente">
+                    <div class="indicador-topo">
+                        <span class="indicador-icone">◷</span>
+                        <span class="indicador-legenda">Aguardando</span>
+                    </div>
+                    <p>Abertos</p>
+                    <strong id="pendentes">0</strong>
+                </article>
+
+                <article class="indicador indicador--andamento">
+                    <div class="indicador-topo">
+                        <span class="indicador-icone">↻</span>
+                        <span class="indicador-legenda">Em execução</span>
+                    </div>
+                    <p>Em atendimento</p>
+                    <strong id="em-andamento">0</strong>
+                </article>
+
+                <article class="indicador indicador--concluido">
+                    <div class="indicador-topo">
+                        <span class="indicador-icone">✓</span>
+                        <span class="indicador-legenda">Finalizados</span>
+                    </div>
+                    <p>Resolvidos</p>
+                    <strong id="concluidas">0</strong>
+                </article>
+            </section>
+
+            <!-- CADASTRO DE CHAMADOS -->
+            <section class="secao-painel secao-cadastro">
+                <div class="secao-cabecalho">
+                    <div>
+                        <span class="texto-destaque">NOVA SOLICITAÇÃO</span>
+                        <h2>Abrir chamado</h2>
+                        <p>Preencha as informações para registrar uma nova demanda.</p>
+                    </div>
+                </div>
+
+                <form id="formulario" class="form-chamado">
+                    <div class="campo campo--assunto">
+                        <label for="titulo">Assunto do chamado</label>
+                        <input
+                            type="text"
+                            id="titulo"
+                            placeholder="Ex.: Erro ao acessar o sistema"
+                            required
+                            minlength="3"
+                        >
+                    </div>
+
+                    <div class="campo">
+                        <label for="prioridade">Prioridade</label>
+                        <select id="prioridade" required>
+                            <option value="baixa">Baixa</option>
+                            <option value="media" selected>Média</option>
+                            <option value="alta">Alta</option>
+                        </select>
+                    </div>
+
+                    <div class="campo">
+                        <label for="prazo">Prazo</label>
+                        <input type="date" id="prazo">
+                    </div>
+
+                    <div class="campo campo--tags">
+                        <label for="tags">Categorias</label>
+                        <input
+                            type="text"
+                            id="tags"
+                            placeholder="Ex.: rede, acesso, sistema"
+                        >
+                        <small>Separe as categorias por vírgula.</small>
+                    </div>
+
+                    <div class="formulario-rodape">
+                        <span class="texto-apoio">
+                            Os campos serão registrados no sistema.
+                        </span>
+                        <button type="submit" class="botao botao--primario">
+                            + Registrar chamado
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- LISTA E FILTROS -->
+            <section class="secao-painel secao-listagem">
+                <div class="secao-cabecalho secao-cabecalho--lista">
+                    <div>
+                        <span class="texto-destaque">ACOMPANHAMENTO</span>
+                        <h2>Chamados registrados</h2>
+                        <p>Consulte e atualize a situação das solicitações.</p>
+                    </div>
+                </div>
+
+                <div class="area-busca">
+                    <label for="busca">Pesquisar chamados</label>
+                    <div class="campo-busca">
+                        <span aria-hidden="true">⌕</span>
+                        <input
+                            type="search"
+                            id="busca"
+                            placeholder="Pesquise pelo assunto ou descrição..."
+                        >
+                    </div>
+                </div>
+
+                <div class="filtros-container">
+                    <span class="filtros-titulo">Filtrar por situação</span>
+
+                    <div id="filtros-status" class="filtros-status">
+                        <button
+                            type="button"
+                            class="filtro filtro--ativo"
+                            data-status="todos"
+                        >
+                            Todos
+                        </button>
+
+                        <button
+                            type="button"
+                            class="filtro"
+                            data-status="pendente"
+                        >
+                            Abertos
+                        </button>
+
+                        <button
+                            type="button"
+                            class="filtro"
+                            data-status="em_andamento"
+                        >
+                            Em atendimento
+                        </button>
+
+                        <button
+                            type="button"
+                            class="filtro"
+                            data-status="concluida"
+                        >
+                            Resolvidos
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lista-cabecalho">
+                    <h3>Solicitações</h3>
+                    <span>Gerenciamento de chamados</span>
+                </div>
+
+                <ul id="lista" class="lista-tarefas"></ul>
+
+                <div id="vazio" class="estado-vazio" hidden>
+                    <span class="estado-vazio-icone">▤</span>
+                    <h3>Nenhum chamado encontrado</h3>
+                    <p>
+                        Registre um novo chamado ou altere os filtros da pesquisa.
+                    </p>
+                </div>
+            </section>
+        </main>
+
+        <footer class="rodape">
+            <p>TaskFlow <span>•</span> Gerenciamento de chamados de suporte</p>
+            <p>Organização, acompanhamento e controle.</p>
+        </footer>
+    </div>
+
+    <script type="module" src="./src/main.ts"></script>
+</body>
+</html>
