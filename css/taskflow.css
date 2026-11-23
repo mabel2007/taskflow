@@ -1457,3 +1457,201 @@ select:focus-visible {
     width: 100%;
   }
 }
+
+/* ========================================
+   TASKFLOW — CORREÇÕES DO TEMA ESCURO
+======================================== */
+
+:root[data-tema="escuro"] {
+    --cor-cartao: #202c3d;
+    --cor-texto: #e8edf6;
+    --cor-texto-secundario: #a5b1c3;
+    --cor-fundo: #182333;
+    --cor-borda: #3b4a60;
+    --cor-primaria: #4f83f1;
+}
+
+/* Tela de entrada */
+:root[data-tema="escuro"] .tela-inicial {
+    background: radial-gradient(circle at top left, #263b5d 0, transparent 45%), #151b28;
+}
+
+:root[data-tema="escuro"] .inicio-apresentacao h1,
+:root[data-tema="escuro"] .autenticacao-cabecalho h2 {
+    color: #e8edf6;
+}
+
+:root[data-tema="escuro"] .inicio-subtitulo,
+:root[data-tema="escuro"] .autenticacao-cabecalho p,
+:root[data-tema="escuro"] .alternar-conta {
+    color: #a5b1c3;
+}
+
+:root[data-tema="escuro"] .cartao-autenticacao {
+    background: #202c3d;
+    border-color: #3b4a60;
+}
+
+:root[data-tema="escuro"] .form-autenticacao label,
+:root[data-tema="escuro"] .campo label,
+:root[data-tema="escuro"] .area-busca label {
+    color: #cbd5e1;
+}
+
+:root[data-tema="escuro"] .aviso-autenticacao {
+    border-color: #3b4a60;
+    color: #94a3b8;
+}
+
+/* Títulos e textos do painel */
+:root[data-tema="escuro"] .boas-vindas h1,
+:root[data-tema="escuro"] .secao-cabecalho h2,
+:root[data-tema="escuro"] .lista-cabecalho h3,
+:root[data-tema="escuro"] .tarefa__titulo,
+:root[data-tema="escuro"] .indicador strong,
+:root[data-tema="escuro"] .estado-vazio h3 {
+    color: #e8edf6;
+}
+
+:root[data-tema="escuro"] .boas-vindas p,
+:root[data-tema="escuro"] .secao-cabecalho p,
+:root[data-tema="escuro"] .indicador p,
+:root[data-tema="escuro"] .tarefa__descricao,
+:root[data-tema="escuro"] .estado-vazio p,
+:root[data-tema="escuro"] .filtros-titulo {
+    color: #a5b1c3;
+}
+
+/* Formulários e pesquisa */
+:root[data-tema="escuro"] .campo input,
+:root[data-tema="escuro"] .campo select,
+:root[data-tema="escuro"] .form-autenticacao input,
+:root[data-tema="escuro"] .campo-busca input {
+    background: #182333;
+    color: #e8edf6;
+    border-color: #3b4a60;
+}
+
+:root[data-tema="escuro"] .campo-busca {
+    background: #182333;
+    border-color: #3b4a60;
+}
+
+:root[data-tema="escuro"] .formulario-rodape {
+    border-color: #3b4a60;
+}
+
+:root[data-tema="escuro"] .texto-apoio,
+:root[data-tema="escuro"] .campo small {
+    color: #a5b1c3;
+}
+
+/* Etiquetas e categorias */
+:root[data-tema="escuro"] .etiqueta,
+:root[data-tema="escuro"] .tag {
+    background: #334155;
+    color: #e2e8f0;
+}
+
+:root[data-tema="escuro"] .etiqueta--alta {
+    background: #512d35;
+    color: #fecaca;
+}
+
+:root[data-tema="escuro"] .etiqueta--media {
+    background: #514126;
+    color: #fde68a;
+}
+
+:root[data-tema="escuro"] .etiqueta--baixa {
+    background: #234b3a;
+    color: #bbf7d0;
+}
+
+:root[data-tema="escuro"] .etiqueta--status {
+    background: #263e78;
+    color: #c6d5ff;
+}
+
+/* Cartões e estado vazio */
+:root[data-tema="escuro"] .tarefa {
+    background: #202c3d;
+    border-color: #3b4a60;
+}
+
+:root[data-tema="escuro"] .tarefa--atrasada {
+    background: #382a32;
+}
+
+:root[data-tema="escuro"] .estado-vazio {
+    background: #1c293a;
+}
+
+:root[data-tema="escuro"] .indicador-icone {
+    background: #334b70;
+    color: #bfdbfe;
+}
+
+/* Botões */
+:root[data-tema="escuro"] .botao:hover {
+    background: #34445d;
+    color: #bfdbfe;
+}
+
+:root[data-tema="escuro"] .botao--primario {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+:root[data-tema="escuro"] .botao--sucesso {
+    background: #234b3a;
+    color: #bbf7d0;
+    border-color: #347456;
+}
+
+:root[data-tema="escuro"] .botao--perigo {
+    background: #512d35;
+    color: #fecaca;
+    border-color: #85404b;
+}
+
+/* Filtros */
+:root[data-tema="escuro"] .filtro {
+    background: #29364b;
+    color: #cbd5e1;
+}
+
+:root[data-tema="escuro"] .filtro--ativo {
+    background: #263e78;
+    color: #dbeafe;
+    border-color: #5476c5;
+}
+
+/* Modal */
+:root[data-tema="escuro"] .taskflow-modal {
+    background: #202c3d;
+    color: #e8edf6;
+}
+
+:root[data-tema="escuro"] .modal-campo input,
+:root[data-tema="escuro"] .modal-campo select,
+:root[data-tema="escuro"] .modal-campo textarea {
+    background: #182333;
+    color: #e8edf6;
+    border-color: #3b4a60;
+}
+
+:root[data-tema="escuro"] .modal-subtitulo,
+:root[data-tema="escuro"] .modal-cabecalho p {
+    color: #a5b1c3;
+}
+
+:root[data-tema="escuro"] .modal-separador {
+    background: #3b4a60;
+}
+
+/* Rodapé */
+:root[data-tema="escuro"] .rodape {
+    border-color: #3b4a60;
+    color: #a5b1c3;
+}
